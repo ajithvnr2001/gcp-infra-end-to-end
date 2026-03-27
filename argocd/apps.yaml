@@ -12,7 +12,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/YOUR_USERNAME/ecommerce-gcp-project   # change this
+    repoURL: https://github.com/ajithvnr2001/gcp-infra-end-to-end   # change this
     targetRevision: main
     path: k8s
   destination:
