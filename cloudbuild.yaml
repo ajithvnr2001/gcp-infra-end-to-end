@@ -1,0 +1,105 @@
+# cloudbuild.yaml
+# GCP Cloud Build CI/CD Pipeline
+#
+# HOW IT WORKS:
+#   1. Developer runs `git push` to the `main` branch
+#   2. Cloud Build Trigger detects the push and starts this pipeline
+#   3. This file builds ALL 4 microservice images in PARALLEL
+#   4. Each image is tagged with the Git commit SHA (immutable) AND `latest`
+#   5. ArgoCD detects the new tag and rolls out the updated pods automatically
+#
+# WHY COMMIT SHA TAGS? (interview answer)
+#   - `latest` is mutable — you can never tell which code is running
+#   - SHA tags are immutable — you can roll back to an exact commit
+#   - Enables zero-downtime rollbacks: `kubectl set image` to a previous SHA
+#
+# Deploy trigger: Cloud Build Trigger connected to GitHub repo
+# (Set up via: gcloud builds triggers create github ...)
+
+steps:
+  # ── Step 1: Build catalog-service ─────────────────────────────────────────
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-catalog
+    args:
+      - build
+      - -t
+      - gcr.io/$PROJECT_ID/catalog-service:$COMMIT_SHA
+      - -t
+      - gcr.io/$PROJECT_ID/catalog-service:latest
+      - services/catalog/
+    waitFor: ['-']   # start immediately (parallel)
+
+  # ── Step 2: Build cart-service ─────────────────────────────────────────────
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-cart
+    args:
+      - build
+      - -t
+      - gcr.io/$PROJECT_ID/cart-service:$COMMIT_SHA
+      - -t
+      - gcr.io/$PROJECT_ID/cart-service:latest
+      - services/cart/
+    waitFor: ['-']   # parallel with catalog
+
+  # ── Step 3: Build payment-service ─────────────────────────────────────────
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-payment
+    args:
+      - build
+      - -t
+      - gcr.io/$PROJECT_ID/payment-service:$COMMIT_SHA
+      - -t
+      - gcr.io/$PROJECT_ID/payment-service:latest
+      - services/payment/
+    waitFor: ['-']   # parallel
+
+  # ── Step 4: Build api-gateway ─────────────────────────────────────────────
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-gateway
+    args:
+      - build
+      - -t
+      - gcr.io/$PROJECT_ID/api-gateway:$COMMIT_SHA
+      - -t
+      - gcr.io/$PROJECT_ID/api-gateway:latest
+      - services/api-gateway/
+    waitFor: ['-']   # parallel
+
+  # ── Step 5: Push all images to GCR ────────────────────────────────────────
+  # (Cloud Build automatically pushes images listed in `images:` below)
+
+  # ── Step 6: Update k8s manifests with new image tag ────────────────────────
+  # WHY: ArgoCD watches Git. To trigger a deploy we update the image tag in Git.
+  # This creates the GitOps "Golden Thread": Code → Build → Git Update → ArgoCD Deploy
+  - name: 'gcr.io/cloud-builders/git'
+    id: update-k8s-tags
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        git config user.email "cloudbuild@my-project-32062-newsletter.iam.gserviceaccount.com"
+        git config user.name "Cloud Build"
+        # Replace the image tags in deployment manifests with the new commit SHA
+        sed -i "s|catalog-service:.*|catalog-service:${COMMIT_SHA}|g" k8s/deployments/catalog-deployment.yaml
+        sed -i "s|cart-service:.*|cart-service:${COMMIT_SHA}|g" k8s/deployments/other-deployments.yaml
+        sed -i "s|payment-service:.*|payment-service:${COMMIT_SHA}|g" k8s/deployments/other-deployments.yaml
+        sed -i "s|api-gateway:.*|api-gateway:${COMMIT_SHA}|g" k8s/deployments/other-deployments.yaml
+        git add k8s/deployments/
+        git commit -m "ci: update image tags to ${COMMIT_SHA} [skip ci]"
+        git push
+    waitFor: ['build-catalog', 'build-cart', 'build-payment', 'build-gateway']
+
+# Push all tagged images to GCR after build
+images:
+  - gcr.io/$PROJECT_ID/catalog-service:$COMMIT_SHA
+  - gcr.io/$PROJECT_ID/catalog-service:latest
+  - gcr.io/$PROJECT_ID/cart-service:$COMMIT_SHA
+  - gcr.io/$PROJECT_ID/cart-service:latest
+  - gcr.io/$PROJECT_ID/payment-service:$COMMIT_SHA
+  - gcr.io/$PROJECT_ID/payment-service:latest
+  - gcr.io/$PROJECT_ID/api-gateway:$COMMIT_SHA
+  - gcr.io/$PROJECT_ID/api-gateway:latest
+
+options:
+  machineType: 'E2_HIGHCPU_8'  # 8 vCPUs — faster parallel builds
+  logging: CLOUD_LOGGING_ONLY
