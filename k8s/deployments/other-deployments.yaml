@@ -20,6 +20,10 @@ spec:
     metadata:
       labels:
         app: cart-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "8001"
     spec:
       serviceAccountName: ecommerce-sa
       containers:
@@ -74,6 +78,10 @@ spec:
     metadata:
       labels:
         app: payment-service
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "8002"
     spec:
       serviceAccountName: ecommerce-sa
       containers:
@@ -128,6 +136,10 @@ spec:
     metadata:
       labels:
         app: api-gateway
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "8080"
     spec:
       serviceAccountName: ecommerce-sa
       containers:
