@@ -1,0 +1,78 @@
+# monitoring/slo/slo-definitions.yaml
+# SLO = Service Level Objective
+# SLI = Service Level Indicator (the actual metric measured)
+# Error Budget = how much downtime/errors you're allowed per month
+#
+# These follow Google's SRE multi-window, multi-burn-rate alerting strategy
+# Fast burn   → 1h  window, 14x burn → page immediately
+# Slow burn   → 6h  window, 6x burn  → page within hours
+# Trend alert → 72h window           → ticket, no page
+
+---
+# ── AVAILABILITY SLOs ─────────────────────────────────────────────────────────
+
+# Payment Service — 99.9% availability (most critical)
+# Error budget: 43.8 min/month
+apiVersion: monitoring.googleapis.com/v3
+kind: ServiceLevelObjective
+metadata:
+  name: payment-availability-slo
+spec:
+  displayName: "Payment Service Availability — 99.9%"
+  goal: 0.999
+  calendarPeriod: MONTH
+  serviceLevelIndicator:
+    requestBased:
+      goodTotalRatio:
+        goodServiceFilter: >
+          metric.type="prometheus.googleapis.com/http_requests_total/gauge"
+          AND resource.labels.namespace="ecommerce"
+          AND metric.labels.service="payment-service"
+          AND metric.labels.status=~"2.."
+        totalServiceFilter: >
+          metric.type="prometheus.googleapis.com/http_requests_total/gauge"
+          AND resource.labels.namespace="ecommerce"
+          AND metric.labels.service="payment-service"
+
+---
+# Catalog Service — 99.5% availability
+# Error budget: 3.6 hours/month
+apiVersion: monitoring.googleapis.com/v3
+kind: ServiceLevelObjective
+metadata:
+  name: catalog-availability-slo
+spec:
+  displayName: "Catalog Service Availability — 99.5%"
+  goal: 0.995
+  calendarPeriod: MONTH
+  serviceLevelIndicator:
+    requestBased:
+      goodTotalRatio:
+        goodServiceFilter: >
+          metric.type="prometheus.googleapis.com/http_requests_total/gauge"
+          AND metric.labels.service="catalog-service"
+          AND metric.labels.status=~"2.."
+        totalServiceFilter: >
+          metric.type="prometheus.googleapis.com/http_requests_total/gauge"
+          AND metric.labels.service="catalog-service"
+
+---
+# ── LATENCY SLOs ──────────────────────────────────────────────────────────────
+
+# API Gateway — 95% of requests under 300ms
+apiVersion: monitoring.googleapis.com/v3
+kind: ServiceLevelObjective
+metadata:
+  name: api-gateway-latency-slo
+spec:
+  displayName: "API Gateway Latency — P95 < 300ms"
+  goal: 0.95
+  calendarPeriod: MONTH
+  serviceLevelIndicator:
+    requestBased:
+      distributionCut:
+        distributionFilter: >
+          metric.type="prometheus.googleapis.com/http_request_duration_seconds/histogram"
+          AND metric.labels.service="api-gateway"
+        range:
+          max: 0.3    # 300ms

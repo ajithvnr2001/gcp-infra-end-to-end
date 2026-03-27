@@ -1,0 +1,7 @@
+# terraform/envs/prod/terraform.tfvars.example
+# Copy this to terraform.tfvars and fill in your values
+# terraform.tfvars is gitignored — never commit it
+
+project_id  = "your-gcp-project-id"
+region      = "asia-south1"
+db_password = "change-me-use-strong-password"

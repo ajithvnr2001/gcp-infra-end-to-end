@@ -1,0 +1,66 @@
+# k8s/deployments/catalog-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-service
+  namespace: ecommerce
+  labels:
+    app: catalog-service
+    version: v1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: catalog-service
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1          # Spin up 1 extra pod during update
+      maxUnavailable: 0    # Never kill a pod before new one is ready
+  template:
+    metadata:
+      labels:
+        app: catalog-service
+        version: v1
+    spec:
+      serviceAccountName: ecommerce-sa
+      containers:
+        - name: catalog
+          image: gcr.io/PROJECT_ID/catalog-service:latest  # replaced by CI
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: catalog-config
+            - secretRef:
+                name: catalog-secret
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          # Liveness probe — restart pod if app crashes/hangs
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            failureThreshold: 3
+          # Readiness probe — only send traffic when app is ready
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      # Spread pods across different nodes (fault tolerance)
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app: catalog-service

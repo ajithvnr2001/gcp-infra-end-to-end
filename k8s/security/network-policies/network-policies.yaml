@@ -1,0 +1,213 @@
+# security/network-policies/network-policies.yaml
+# Zero-trust networking — by default deny ALL traffic
+# Then explicitly allow only what's needed
+# This is a senior-level practice — prevents lateral movement if a pod is compromised
+
+---
+# ── Default DENY ALL ingress and egress in ecommerce namespace ────────────────
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: ecommerce
+spec:
+  podSelector: {}    # applies to ALL pods
+  policyTypes:
+    - Ingress
+    - Egress
+
+---
+# ── Allow DNS resolution (pods need this to reach other services) ─────────────
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns
+  namespace: ecommerce
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+
+---
+# ── API Gateway: accepts traffic from Ingress controller only ─────────────────
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: api-gateway-netpol
+  namespace: ecommerce
+spec:
+  podSelector:
+    matchLabels:
+      app: api-gateway
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress:
+    # Can reach catalog, cart, payment services
+    - to:
+        - podSelector:
+            matchLabels:
+              app: catalog-service
+      ports:
+        - port: 8000
+    - to:
+        - podSelector:
+            matchLabels:
+              app: cart-service
+      ports:
+        - port: 8001
+    - to:
+        - podSelector:
+            matchLabels:
+              app: payment-service
+      ports:
+        - port: 8002
+    # Can reach OTel collector for traces
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 4317   # OTLP gRPC
+
+---
+# ── Catalog: only reachable from API Gateway ──────────────────────────────────
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: catalog-netpol
+  namespace: ecommerce
+spec:
+  podSelector:
+    matchLabels:
+      app: catalog-service
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: api-gateway
+      ports:
+        - port: 8000
+    # Allow Prometheus scraping
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 8000
+  egress:
+    # Cloud SQL via Cloud SQL Auth Proxy (localhost sidecar)
+    - to:
+        - ipBlock:
+            cidr: 127.0.0.1/32
+      ports:
+        - port: 5432
+    # OTel collector
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 4317
+
+---
+# ── Cart: only reachable from API Gateway ────────────────────────────────────
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cart-netpol
+  namespace: ecommerce
+spec:
+  podSelector:
+    matchLabels:
+      app: cart-service
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: api-gateway
+      ports:
+        - port: 8001
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 8001
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 4317
+
+---
+# ── Payment: strictest policy — only API Gateway, no lateral movement ─────────
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: payment-netpol
+  namespace: ecommerce
+spec:
+  podSelector:
+    matchLabels:
+      app: payment-service
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: api-gateway
+      ports:
+        - port: 8002
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 8002
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 127.0.0.1/32
+      ports:
+        - port: 5432
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 4317
+    # Allow Razorpay payment gateway (external)
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+      ports:
+        - port: 443

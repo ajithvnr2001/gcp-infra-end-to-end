@@ -1,0 +1,33 @@
+# argocd/apps.yaml
+# ArgoCD watches your GitHub repo and auto-syncs k8s/ folder to the cluster
+# This is the "App of Apps" pattern — one file deploys everything
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ecommerce-catalog
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/YOUR_USERNAME/ecommerce-gcp-project   # change this
+    targetRevision: main
+    path: k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ecommerce
+  syncPolicy:
+    automated:
+      prune: true        # delete resources removed from git
+      selfHeal: true     # auto-fix drift (someone manually changed something)
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

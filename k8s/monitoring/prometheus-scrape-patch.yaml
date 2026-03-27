@@ -1,0 +1,58 @@
+# k8s/monitoring/prometheus-scrape-patch.yaml
+# Adds Prometheus scrape annotations to all deployments
+# Prometheus auto-discovers pods with these annotations
+
+# Apply with: kubectl patch deployment catalog-service -n ecommerce --patch-file prometheus-scrape-patch.yaml
+# Or add these annotations directly inside your deployment yamls under spec.template.metadata.annotations
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalog-service
+  namespace: ecommerce
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path:   "/metrics"
+        prometheus.io/port:   "8000"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart-service
+  namespace: ecommerce
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path:   "/metrics"
+        prometheus.io/port:   "8001"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-service
+  namespace: ecommerce
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path:   "/metrics"
+        prometheus.io/port:   "8002"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: ecommerce
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path:   "/metrics"
+        prometheus.io/port:   "8080"

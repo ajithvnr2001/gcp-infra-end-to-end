@@ -1,0 +1,52 @@
+# security/pod-security/pod-security.yaml
+# Pod Security Standards — prevents pods from running as root,
+# using host network, privilege escalation etc.
+# This is enforced at namespace level
+
+---
+# Label the namespace to enforce restricted pod security
+# (GKE 1.25+ supports this natively)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ecommerce
+  labels:
+    # warn: shows warning but allows pod
+    # enforce: blocks pod from starting
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: latest
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/warn-version: latest
+
+---
+# OPA Gatekeeper constraint — require resource limits on all containers
+# Install Gatekeeper: kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/release-3.14/deploy/gatekeeper.yaml
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredResources
+metadata:
+  name: require-resource-limits
+spec:
+  match:
+    kinds:
+      - apiGroups: ["apps"]
+        kinds: ["Deployment"]
+    namespaces: ["ecommerce"]
+  parameters:
+    limits: ["cpu", "memory"]
+    requests: ["cpu", "memory"]
+
+---
+# OPA Gatekeeper constraint — no latest image tags in production
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sDisallowedTags
+metadata:
+  name: no-latest-image-tags
+spec:
+  match:
+    kinds:
+      - apiGroups: ["apps"]
+        kinds: ["Deployment"]
+    namespaces: ["ecommerce"]
+  parameters:
+    tags: ["latest"]
+    exemptImages: []

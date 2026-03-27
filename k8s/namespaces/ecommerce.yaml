@@ -1,0 +1,8 @@
+# k8s/namespaces/ecommerce.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ecommerce
+  labels:
+    env: production
+    team: platform

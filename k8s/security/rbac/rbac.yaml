@@ -1,0 +1,149 @@
+# security/rbac/rbac.yaml
+# Least-privilege RBAC — never run workloads as cluster-admin
+#
+# Roles defined:
+#   ecommerce-app-sa   → service account for all microservices (read secrets, configmaps only)
+#   developer-role     → can view pods/logs but cannot delete or exec
+#   on-call-role       → can restart pods, view logs, exec for debugging
+#   cicd-role          → GitHub Actions SA — deploy only to ecommerce namespace
+
+---
+# ── Service Account for microservices ─────────────────────────────────────────
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ecommerce-sa
+  namespace: ecommerce
+  annotations:
+    # Workload Identity — pod uses GCP SA without mounting a key file
+    iam.gke.io/gcp-service-account: ecommerce-workload@PROJECT_ID.iam.gserviceaccount.com
+---
+# What the microservices are allowed to do inside the cluster
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: ecommerce-app-role
+  namespace: ecommerce
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get"]
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ecommerce-app-rolebinding
+  namespace: ecommerce
+subjects:
+  - kind: ServiceAccount
+    name: ecommerce-sa
+    namespace: ecommerce
+roleRef:
+  kind: Role
+  apiGroup: rbac.authorization.k8s.io
+  name: ecommerce-app-role
+
+---
+# ── Developer Role — read-only, no exec, no delete ────────────────────────────
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: developer-role
+  namespace: ecommerce
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "services", "endpoints", "configmaps"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get", "list"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["autoscaling"]
+    resources: ["horizontalpodautoscalers"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: developer-rolebinding
+  namespace: ecommerce
+subjects:
+  - kind: Group
+    name: "developers@yourcompany.com"   # Google Workspace group
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  apiGroup: rbac.authorization.k8s.io
+  name: developer-role
+
+---
+# ── On-call Role — can restart pods and exec for live debugging ───────────────
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: oncall-role
+  namespace: ecommerce
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "pods/exec", "services", "configmaps", "events"]
+    verbs: ["get", "list", "watch", "delete"]   # delete pod = restart it
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch", "patch", "update"]   # for rollbacks
+  - apiGroups: ["autoscaling"]
+    resources: ["horizontalpodautoscalers"]
+    verbs: ["get", "list", "watch", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: oncall-rolebinding
+  namespace: ecommerce
+subjects:
+  - kind: Group
+    name: "oncall@yourcompany.com"
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  apiGroup: rbac.authorization.k8s.io
+  name: oncall-role
+
+---
+# ── CI/CD Role — GitHub Actions can deploy but nothing else ──────────────────
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: cicd-role
+  namespace: ecommerce
+rules:
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "patch", "update"]
+  - apiGroups: [""]
+    resources: ["configmaps", "services"]
+    verbs: ["get", "list", "patch", "update"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses"]
+    verbs: ["get", "list", "patch", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: cicd-rolebinding
+  namespace: ecommerce
+subjects:
+  - kind: ServiceAccount
+    name: github-actions-sa
+    namespace: kube-system
+roleRef:
+  kind: Role
+  apiGroup: rbac.authorization.k8s.io
+  name: cicd-role

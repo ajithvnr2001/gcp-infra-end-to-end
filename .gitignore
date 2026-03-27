@@ -1,0 +1,30 @@
+# GCP credentials — NEVER commit
+*.json
+!monitoring/dashboards/dashboard.json
+github-sa-key.json
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.backup
+*.tfvars
+!terraform/envs/prod/terraform.tfvars.example
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+dist/
+.coverage
+coverage.xml
+
+# Docker
+.dockerignore
+
+# Local dev
+.env
+.env.*
+*.log
+/tmp/

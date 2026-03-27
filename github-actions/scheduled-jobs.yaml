@@ -1,0 +1,126 @@
+# github-actions/scheduled-jobs.yaml
+# Scheduled automation — runs without any code push
+# Copy to .github/workflows/scheduled-jobs.yaml
+
+name: Scheduled Jobs
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"    # DR backup every 6 hours
+    - cron: "0 9 * * *"      # Cost check every day at 9am UTC (2:30pm IST)
+  workflow_dispatch:           # allow manual trigger from GitHub UI
+
+jobs:
+  # ── Disaster Recovery Backup ─────────────────────────────────────────────
+  dr-backup:
+    name: DR Backup
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 */6 * * *' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Setup kubectl
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+          cluster_name: ecommerce-cluster
+          location: asia-south1
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Run DR Backup
+        run: python3 disaster-recovery/dr_backup.py
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          DR_BUCKET: gs://ecommerce-dr-backups
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+            -H 'Content-type: application/json' \
+            -d '{"text":"❌ DR Backup FAILED — check GitHub Actions"}'
+
+  # ── Cost Monitoring ──────────────────────────────────────────────────────
+  cost-check:
+    name: Daily Cost Check
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 9 * * *' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Setup kubectl
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+          cluster_name: ecommerce-cluster
+          location: asia-south1
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Run Cost Monitor
+        run: python3 cost/cost_monitor.py
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          MONTHLY_BUDGET_USD: "500"
+          ALERT_THRESHOLD_PCT: "80"
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  # ── SSL Certificate Check ─────────────────────────────────────────────────
+  ssl-check:
+    name: SSL Certificate Expiry Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check SSL expiry
+        run: |
+          DOMAIN="shop.yourdomain.com"
+          EXPIRY=$(echo | openssl s_client -connect $DOMAIN:443 -servername $DOMAIN 2>/dev/null \
+            | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)
+          if [ -z "$EXPIRY" ]; then
+            echo "⚠️  Could not check SSL (domain may not be configured yet)"
+            exit 0
+          fi
+          EXPIRY_EPOCH=$(date -d "$EXPIRY" +%s 2>/dev/null || date -j -f "%b %d %H:%M:%S %Y %Z" "$EXPIRY" +%s)
+          NOW_EPOCH=$(date +%s)
+          DAYS_LEFT=$(( (EXPIRY_EPOCH - NOW_EPOCH) / 86400 ))
+          echo "SSL certificate for $DOMAIN expires in $DAYS_LEFT days ($EXPIRY)"
+          if [ $DAYS_LEFT -lt 30 ]; then
+            echo "⚠️  Certificate expiring soon! cert-manager should auto-renew."
+            curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+              -H 'Content-type: application/json' \
+              -d "{\"text\":\"⚠️ SSL cert for $DOMAIN expires in $DAYS_LEFT days\"}"
+          fi
+
+  # ── Health Check ─────────────────────────────────────────────────────────
+  health-check:
+    name: Production Health Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - uses: google-github-actions/get-gke-credentials@v2
+        with:
+          cluster_name: ecommerce-cluster
+          location: asia-south1
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Run health monitor (single pass)
+        run: |
+          CHECK_INTERVAL=0 python3 scripts/health_monitor.py
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}

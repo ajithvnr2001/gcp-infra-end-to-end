@@ -1,0 +1,68 @@
+# Project Architecture Overview
+
+This diagram represents the production-ready e-commerce platform architecture on Google Cloud Platform.
+
+## 🏗️ Infrastructure & Deployment Flow
+
+```mermaid
+graph TB
+    subgraph "Public Internet"
+        User((User/Browser))
+        GitHub[GitHub Repository]
+    end
+
+    subgraph "Google Cloud Platform - Project"
+        subgraph "VPC Network (prod-ecommerce-vpc)"
+            subgraph "GKE Autopilot (ecommerce-cluster)"
+                Ingress[NGINX Ingress Controller]
+                subgraph "ecommerce Namespace"
+                    APIGateway[API Gateway Pods]
+                    CatalogSvc[Catalog Service Pods]
+                    OrderSvc[Order Service Pods]
+                end
+                ArgoCD[ArgoCD Controller]
+            end
+
+            subgraph "Private Services Access"
+                DBInstance[(Cloud SQL: Postgres)]
+            end
+        end
+
+        ArtifactRegistry[(Artifact Registry)]
+    end
+
+    %% Flow: User Access
+    User -- HTTPS --> Ingress
+    Ingress -- Internal LoadBalancer --> APIGateway
+    APIGateway -- ClusterIP --> CatalogSvc
+    APIGateway -- ClusterIP --> OrderSvc
+    CatalogSvc -- Private IP --> DBInstance
+    OrderSvc -- Private IP --> DBInstance
+
+    %% Flow: Deployment (CI/CD)
+    GitHub -- "1. Push Code" --> GHA[GitHub Actions]
+    GHA -- "2. Build & Push Image" --> ArtifactRegistry
+    GHA -- "3. Update Manifests" --> GitHub
+    ArgoCD -- "4. Pull State" --> GitHub
+    ArgoCD -- "5. Sync / Rollout" --> ecommerce
+```
+
+## 🔍 Layer Breakdown
+
+### 1. Networking Layer (VPC)
+- **Isolation**: All compute resources (GKE, Cloud SQL) are in a private network.
+- **Cloud NAT**: Allows private GKE nodes to pull updates from the internet without being exposed.
+- **Private Services Access**: A dedicated peering range allows GKE and Cloud SQL to communicate over Google's internal backbone.
+
+### 2. Compute Layer (GKE Autopilot)
+- **Managed GKE**: Google manages the nodes, security patches, and scaling.
+- **Ingress NGINX**: Acts as the single entry point.
+- **App Services**: Microservices (Catalog, Order) are containerized and scaled based on CPU usage.
+
+### 3. Data Layer (Cloud SQL)
+- **Managed Postgres**: Handles persistence, snapshots, and high-availability across zones.
+- **Storage**: SSD-based persistent storage with auto-resize capability.
+
+### 4. GitOps Layer (ArgoCD + GHA)
+- **ArgoCD**: Implements the "State vs Actuality" loop. If someone manually deletes a pod, ArgoCD brings it back.
+- **Continuous Integration**: GitHub Actions automates the containerization process.

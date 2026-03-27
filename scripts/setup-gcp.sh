@@ -1,0 +1,62 @@
+#!/bin/bash
+# scripts/setup-gcp.sh
+# Run this FIRST — enables APIs and creates a service account for GitHub Actions
+
+set -e
+
+PROJECT_ID=$1
+if [ -z "$PROJECT_ID" ]; then
+  echo "Usage: ./setup-gcp.sh <project-id>"
+  exit 1
+fi
+
+echo "🔧 Setting project: $PROJECT_ID"
+gcloud config set project $PROJECT_ID
+
+echo ""
+echo "🚀 Enabling required GCP APIs..."
+gcloud services enable \
+  container.googleapis.com \
+  sqladmin.googleapis.com \
+  cloudbuild.googleapis.com \
+  monitoring.googleapis.com \
+  logging.googleapis.com \
+  containerregistry.googleapis.com \
+  compute.googleapis.com \
+  servicenetworking.googleapis.com \
+  cloudresourcemanager.googleapis.com
+
+echo ""
+echo "👤 Creating GitHub Actions service account..."
+SA_NAME="github-actions-sa"
+SA_EMAIL="${SA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
+
+gcloud iam service-accounts create $SA_NAME \
+  --display-name="GitHub Actions CI/CD" \
+  --project=$PROJECT_ID
+
+echo "🔑 Granting required roles..."
+for ROLE in \
+  roles/container.admin \
+  roles/storage.admin \
+  roles/iam.serviceAccountUser \
+  roles/monitoring.editor \
+  roles/logging.logWriter; do
+  gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member="serviceAccount:${SA_EMAIL}" \
+    --role="$ROLE" --quiet
+done
+
+echo ""
+echo "📄 Generating service account key..."
+gcloud iam service-accounts keys create github-sa-key.json \
+  --iam-account=$SA_EMAIL
+
+echo ""
+echo "✅ Done! Next steps:"
+echo "  1. Go to GitHub repo → Settings → Secrets → Actions"
+echo "  2. Add secret GCP_PROJECT_ID = $PROJECT_ID"
+echo "  3. Add secret GCP_SA_KEY = \$(base64 -w 0 github-sa-key.json)"
+echo "  4. Delete github-sa-key.json after uploading!"
+echo ""
+echo "⚠️  NEVER commit github-sa-key.json to git"

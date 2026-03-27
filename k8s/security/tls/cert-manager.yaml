@@ -1,0 +1,57 @@
+# security/tls/cert-manager.yaml
+# cert-manager — automatically provisions and renews SSL certificates
+# Uses Let's Encrypt (free) for production-grade HTTPS
+#
+# Install:
+#   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.4/cert-manager.yaml
+#   Wait 60s then apply this file.
+
+---
+# ClusterIssuer — tells cert-manager to use Let's Encrypt production CA
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: ajithvnr2001@gmail.com    # replace with your email — gets expiry alerts
+    privateKeySecretRef:
+      name: letsencrypt-prod-key
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+
+---
+# Staging issuer — use this for testing (no rate limits)
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: ajithvnr2001@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt-staging-key
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+
+---
+# Certificate — request TLS cert for your domain
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ecommerce-tls
+  namespace: ecommerce
+spec:
+  secretName: ecommerce-tls-secret    # cert stored here, referenced by Ingress
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - shop.yourdomain.com
+    - api.yourdomain.com
