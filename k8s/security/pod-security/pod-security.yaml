@@ -1,37 +1,40 @@
 # security/pod-security/pod-security.yaml
 # Pod Security Standards — prevents pods from running as root,
 # using host network, privilege escalation etc.
-# This is enforced at namespace level
+# This is enforced via namespace labels (see k8s/namespaces/ecommerce.yaml)
 
----
-# OPA Gatekeeper constraint — require resource limits on all containers
-# Install Gatekeeper: kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/release-3.14/deploy/gatekeeper.yaml
-apiVersion: constraints.gatekeeper.sh/v1beta1
-kind: K8sRequiredResources
-metadata:
-  name: require-resource-limits
-spec:
-  match:
-    kinds:
-      - apiGroups: ["apps"]
-        kinds: ["Deployment"]
-    namespaces: ["ecommerce"]
-  parameters:
-    limits: ["cpu", "memory"]
-    requests: ["cpu", "memory"]
+# --- OPA Gatekeeper constraints below ---
+# IMPORTANT: These require OPA Gatekeeper to be installed first:
+#   kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/release-3.14/deploy/gatekeeper.yaml
+# They are commented out to allow the core microservices to deploy first.
+# Uncomment once Gatekeeper is installed.
 
----
-# OPA Gatekeeper constraint — no latest image tags in production
-apiVersion: constraints.gatekeeper.sh/v1beta1
-kind: K8sDisallowedTags
-metadata:
-  name: no-latest-image-tags
-spec:
-  match:
-    kinds:
-      - apiGroups: ["apps"]
-        kinds: ["Deployment"]
-    namespaces: ["ecommerce"]
-  parameters:
-    tags: ["latest"]
-    exemptImages: []
+# ---
+# apiVersion: constraints.gatekeeper.sh/v1beta1
+# kind: K8sRequiredResources
+# metadata:
+#   name: require-resource-limits
+# spec:
+#   match:
+#     kinds:
+#       - apiGroups: ["apps"]
+#         kinds: ["Deployment"]
+#     namespaces: ["ecommerce"]
+#   parameters:
+#     limits: ["cpu", "memory"]
+#     requests: ["cpu", "memory"]
+
+# ---
+# apiVersion: constraints.gatekeeper.sh/v1beta1
+# kind: K8sDisallowedTags
+# metadata:
+#   name: no-latest-image-tags
+# spec:
+#   match:
+#     kinds:
+#       - apiGroups: ["apps"]
+#         kinds: ["Deployment"]
+#     namespaces: ["ecommerce"]
+#   parameters:
+#     tags: ["latest"]
+#     exemptImages: []
