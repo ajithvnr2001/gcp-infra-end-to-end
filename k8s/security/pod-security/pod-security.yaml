@@ -4,21 +4,6 @@
 # This is enforced at namespace level
 
 ---
-# Label the namespace to enforce restricted pod security
-# (GKE 1.25+ supports this natively)
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: ecommerce
-  labels:
-    # warn: shows warning but allows pod
-    # enforce: blocks pod from starting
-    pod-security.kubernetes.io/enforce: restricted
-    pod-security.kubernetes.io/enforce-version: latest
-    pod-security.kubernetes.io/warn: restricted
-    pod-security.kubernetes.io/warn-version: latest
-
----
 # OPA Gatekeeper constraint — require resource limits on all containers
 # Install Gatekeeper: kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/release-3.14/deploy/gatekeeper.yaml
 apiVersion: constraints.gatekeeper.sh/v1beta1

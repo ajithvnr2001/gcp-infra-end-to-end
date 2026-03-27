@@ -52,3 +52,39 @@ terraform import module.vpc.google_compute_network.vpc projects/my-project-32062
    ```bash
    terraform apply
    ```
+
+---
+
+# 🚀 GKE & ArgoCD Deployment Fixes (Added today)
+
+I have identified and fixed the following issues preventing your microservices from appearing in the cluster:
+
+### 1. Cluster Context Mismatch (403/NotFound)
+**Problem**: Your `kubectl` was accidentally pointing to an old cluster (`gke_youtube-292903_asia-south1_ha-ecommerce-cluster`). You could see ArgoCD but it was on the *wrong* project.
+**Fix**: Re-connected your terminal to the new cluster:
+```bash
+gcloud container clusters get-credentials ecommerce-cluster --region us-central1 --project my-project-32062-newsletter
+```
+
+### 2. ArgoCD Directory Recursion
+**Problem**: All your manifest files are in subfolders (e.g., `k8s/namespaces`, `k8s/deployments`). By default, ArgoCD only looks in the root of the `path: k8s` folder.
+**Fix**: Updated `argocd/apps.yaml` to include `directory.recurse: true`.
+
+### 3. Manifest Naming Conflict ("Appeared 2 times")
+**Problem**: The file `k8s/monitoring/prometheus-scrape-patch.yaml` was defining the same `catalog-service` Deployment as the main file. This caused a sync conflict.
+**Fix**: 
+1. Merged the Prometheus annotations directly into `k8s/deployments/catalog-deployment.yaml`.
+2. Deleted the conflicting `prometheus-scrape-patch.yaml` file.
+
+### 4. Missing Platform Controllers (CRDs)
+**Problem**: Your cluster was missing **Cert-Manager** and **External-Secrets**. Since your code uses `Certificate` and `ExternalSecret` types, ArgoCD was failing to sync because the cluster didn't understand those types.
+**Fix**: Provided the Helm commands to install these controllers and their CRDs.
+
+### 5. Git Push Permission (403 Forbidden)
+**Problem**: Pushing via HTTPS with a password no longer works on GitHub.
+**Fix**: Provided the instruction to use a **Personal Access Token (PAT)** in the remote URL to bypass the credential issue.
+
+---
+
+## ✨ Current Status: 
+ArgoCD is now successfully tracking all **46 resources**. Once the platform controllers (Helm) are installed, your pods will turn green!

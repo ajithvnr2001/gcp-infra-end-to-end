@@ -141,12 +141,38 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm repo update
 
 # Install the controller
-helm install ingress-nginx ingress-nginx/ingress-nginx \
-  --namespace ingress-nginx --create-namespace \
+helm install ingress-nginx ingress-nginx/ingress-nginx `
+  --namespace ingress-nginx --create-namespace `
   --set controller.service.type=LoadBalancer
 ```
 *   **What**: Downloads the NGINX software and deploys it as a set of Pods in the `ingress-nginx` namespace.
 *   **Why**: GKE doesn't come with an Ingress Controller by default. This creates the **GCP External Load Balancer** that gives you your public entry point.
+
+---
+
+## 🛠️ Step 5.1: Installing Platform Controllers (Cert-Manager & External-Secrets)
+ArgoCD is currently in an `OutOfSync` or `Missing` state because your manifests use custom resource types (`Certificate`, `ExternalSecret`) that the cluster doesn't recognize yet. You must install the "engines" for these services:
+
+### A. Cert-Manager (For HTTPS/TLS)
+```powershell
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+helm install cert-manager jetstack/cert-manager `
+  --namespace cert-manager --create-namespace `
+  --set installCRDs=true
+```
+*   **What**: Installs a controller that automatically manages SSL/TLS certificates.
+*   **Why**: Required for the `Certificate` and `ClusterIssuer` resources in the `k8s/security` folder. This handles your automated HTTPS renewal.
+
+### B. External Secrets (For GCP Secret Manager integration)
+```powershell
+helm repo add external-secrets https://charts.external-secrets.io
+helm install external-secrets external-secrets/external-secrets `
+  --namespace external-secrets --create-namespace `
+  --set installCRDs=true
+```
+*   **What**: A bridge between Google Secret Manager and your K8s cluster.
+*   **Why**: Securely syncs your passwords/keys stored in GCP into the cluster without you having to manually run `kubectl create secret`.
 
 ---
 
