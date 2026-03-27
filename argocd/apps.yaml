@@ -25,7 +25,6 @@ spec:
       prune: true        # delete resources removed from git
       selfHeal: true     # auto-fix drift (someone manually changed something)
     syncOptions:
-      - CreateNamespace=true
       - PrunePropagationPolicy=foreground
     retry:
       limit: 3
