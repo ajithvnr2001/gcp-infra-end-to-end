@@ -26,16 +26,20 @@ spec:
         prometheus.io/port: "8001"
     spec:
       serviceAccountName: ecommerce-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
       containers:
         - name: cart
           image: gcr.io/PROJECT_ID/cart-service:latest
+          securityContext:
+            allowPrivilegeEscalation: false
           ports:
             - containerPort: 8001
           envFrom:
             - configMapRef:
                 name: cart-config
-            - secretRef:
-                name: cart-secret
           resources:
             requests:
               cpu: "100m"
@@ -84,16 +88,20 @@ spec:
         prometheus.io/port: "8002"
     spec:
       serviceAccountName: ecommerce-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
       containers:
         - name: payment
           image: gcr.io/PROJECT_ID/payment-service:latest
+          securityContext:
+            allowPrivilegeEscalation: false
           ports:
             - containerPort: 8002
           envFrom:
             - configMapRef:
                 name: payment-config
-            - secretRef:
-                name: payment-secret
           resources:
             requests:
               cpu: "200m"     # payment needs more resources
@@ -142,9 +150,15 @@ spec:
         prometheus.io/port: "8080"
     spec:
       serviceAccountName: ecommerce-sa
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
       containers:
         - name: api-gateway
           image: gcr.io/PROJECT_ID/api-gateway:latest
+          securityContext:
+            allowPrivilegeEscalation: false
           ports:
             - containerPort: 8080
           env:
