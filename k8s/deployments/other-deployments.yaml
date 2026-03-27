@@ -35,8 +35,9 @@ spec:
           image: gcr.io/PROJECT_ID/cart-service:latest
           securityContext:
             allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           ports:
-            - containerPort: 8001
           envFrom:
             - configMapRef:
                 name: cart-config
@@ -97,8 +98,9 @@ spec:
           image: gcr.io/PROJECT_ID/payment-service:latest
           securityContext:
             allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           ports:
-            - containerPort: 8002
           envFrom:
             - configMapRef:
                 name: payment-config
@@ -159,6 +161,8 @@ spec:
           image: gcr.io/PROJECT_ID/api-gateway:latest
           securityContext:
             allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           ports:
             - containerPort: 8080
           env:
