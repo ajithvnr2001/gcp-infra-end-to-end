@@ -34,7 +34,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: catalog
-          image: gcr.io/PROJECT_ID/catalog-service:latest  # replaced by CI
+          image: gcr.io/my-project-32062-newsletter/catalog-service:latest  # replaced by CI
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
