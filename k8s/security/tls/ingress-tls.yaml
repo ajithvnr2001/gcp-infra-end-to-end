@@ -28,28 +28,28 @@ spec:
       http:
         paths:
           - path: /api/catalog(/|$)(.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: catalog-service
                 port:
                   number: 8000
           - path: /api/cart(/|$)(.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: cart-service
                 port:
                   number: 8001
           - path: /api/payment(/|$)(.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: payment-service
                 port:
                   number: 8002
           - path: /(/|$)(.*)
-            pathType: Prefix
+            pathType: ImplementationSpecific
             backend:
               service:
                 name: api-gateway
