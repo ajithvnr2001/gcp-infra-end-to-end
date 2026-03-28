@@ -211,3 +211,27 @@ spec:
               - 192.168.0.0/16
       ports:
         - port: 443
+
+---
+# ── Frontend: only reachable from Ingress controller ──────────────────────────
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-netpol
+  namespace: ecommerce
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend-service
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress: [] # Static frontend does not need to make outbound API calls
