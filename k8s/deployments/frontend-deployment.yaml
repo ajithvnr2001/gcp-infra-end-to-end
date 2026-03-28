@@ -20,7 +20,7 @@ spec:
         image: gcr.io/my-project-32062-newsletter/frontend-service:latest
         imagePullPolicy: Always
         ports:
-        - containerPort: 80
+        - containerPort: 8080
         resources:
           requests:
             cpu: "50m"
@@ -29,6 +29,7 @@ spec:
             cpu: "200m"
             memory: "128Mi"
         securityContext:
+          runAsNonRoot: true
           allowPrivilegeEscalation: false
           capabilities:
             drop: ["ALL"]
@@ -53,7 +54,7 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 80
+      targetPort: 8080
 
 ---
 apiVersion: autoscaling/v2
