@@ -203,7 +203,8 @@ success "ArgoCD Application 'ecommerce-catalog' registered."
 section "🐳 PHASE 6/8 — BUILD & PUSH DOCKER IMAGES (PARALLEL)"
 
 declare -A SERVICES=( [catalog]="catalog-service" [cart]="cart-service" \
-                      [payment]="payment-service" [api-gateway]="api-gateway" )
+                      [payment]="payment-service" [api-gateway]="api-gateway" \
+                      [frontend]="frontend-service" )
 BUILD_IDS=()
 
 for SVC in "${!SERVICES[@]}"; do
@@ -272,7 +273,11 @@ echo "  User:     admin"
 echo "  Password: ${ARGOCD_PASSWORD}"
 echo "  Run:      kubectl port-forward svc/argocd-server -n argocd 8080:443"
 echo ""
-echo -e "${BOLD}Ingress IP:${NC} ${INGRESS_IP}"
+echo -e "${BOLD}Frontend (Ingress):${NC}"
+echo "  URL:      https://localhost/"
+echo "  Run:      kubectl port-forward svc/ingress-nginx-controller -n ingress-nginx 80:80 443:443"
+echo ""
+echo -e "${BOLD}Ingress Public IP:${NC} ${INGRESS_IP}"
 echo ""
 echo -e "${BOLD}Pods:${NC}"
 kubectl get pods -n ecommerce 2>/dev/null || warn "Check: kubectl get pods -n ecommerce -w"
