@@ -242,6 +242,7 @@ section "🚀 PHASE 6: INSTALL ARGOCD & APPLY APPLICATION"
 log "Installing ArgoCD..."
 kubectl create namespace "$ARGOCD_NS" 2>/dev/null || warn "Namespace argocd already exists."
 kubectl apply -n "$ARGOCD_NS" \
+  --server-side --force-conflicts \
   -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 log "Waiting for ArgoCD pods to be ready..."
 kubectl rollout status deployment/argocd-server -n "$ARGOCD_NS" --timeout=5m

@@ -182,6 +182,7 @@ kubectl create namespace "$ARGOCD_NS" 2>/dev/null || warn "Namespace already exi
 
 log "Installing ArgoCD..."
 kubectl apply -n "$ARGOCD_NS" \
+  --server-side --force-conflicts \
   -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 
 log "Waiting for ArgoCD server to be ready..."
