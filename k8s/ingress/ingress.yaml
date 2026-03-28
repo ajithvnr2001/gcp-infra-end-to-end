@@ -12,7 +12,7 @@ metadata:
     nginx.ingress.kubernetes.io/rate-limit-burst-multiplier: "5"
 spec:
   rules:
-    - host: shop.yourdomain.com    # replace with your domain or use IP
+    - host: localhost
       http:
         paths:
           - path: /api/catalog(/|$)(.*)

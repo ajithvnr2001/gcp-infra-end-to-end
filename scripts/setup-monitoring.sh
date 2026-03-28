@@ -27,7 +27,7 @@ echo "🔔 Creating uptime check for API Gateway..."
 gcloud monitoring uptime create \
   --display-name="API Gateway Uptime" \
   --resource-type=uptime-url \
-  --hostname="shop.yourdomain.com" \
+  --hostname="localhost" \
   --path="/health" \
   --check-interval=60 \
   --project=$PROJECT_ID 2>/dev/null || echo "Uptime check skipped (needs public IP)"

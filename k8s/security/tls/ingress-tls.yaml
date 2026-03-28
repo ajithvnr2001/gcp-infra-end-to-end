@@ -21,10 +21,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - shop.yourdomain.com
+        - localhost
       secretName: ecommerce-tls-secret    # populated by cert-manager
   rules:
-    - host: shop.yourdomain.com
+    - host: localhost
       http:
         paths:
           - path: /api/catalog(/|$)(.*)

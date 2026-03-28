@@ -53,5 +53,4 @@ spec:
     name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
-    - shop.yourdomain.com
-    - api.yourdomain.com
+    - localhost

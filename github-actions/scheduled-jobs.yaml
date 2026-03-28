@@ -83,7 +83,7 @@ jobs:
     steps:
       - name: Check SSL expiry
         run: |
-          DOMAIN="shop.yourdomain.com"
+          DOMAIN="localhost"
           EXPIRY=$(echo | openssl s_client -connect $DOMAIN:443 -servername $DOMAIN 2>/dev/null \
             | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)
           if [ -z "$EXPIRY" ]; then
