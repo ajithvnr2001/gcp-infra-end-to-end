@@ -145,7 +145,9 @@ helm repo add jetstack https://charts.jetstack.io --force-update
 helm repo update
 helm upgrade --install cert-manager jetstack/cert-manager \
   --namespace cert-manager --create-namespace \
-  --set installCRDs=true --wait --timeout 5m
+  --set installCRDs=true \
+  --set startupapicheck.enabled=false \
+  --wait --timeout 5m
 success "cert-manager installed."
 
 # external-secrets
