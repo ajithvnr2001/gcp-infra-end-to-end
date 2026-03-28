@@ -65,6 +65,18 @@ steps:
       - services/api-gateway/
     waitFor: ['-']   # parallel
 
+  # ── Step 4.5: Build frontend-service ──────────────────────────────────────
+  - name: 'gcr.io/cloud-builders/docker'
+    id: build-frontend
+    args:
+      - build
+      - -t
+      - gcr.io/$PROJECT_ID/frontend-service:$COMMIT_SHA
+      - -t
+      - gcr.io/$PROJECT_ID/frontend-service:latest
+      - services/frontend/
+    waitFor: ['-']   # parallel
+
   # ── Step 5: Push all images to GCR ────────────────────────────────────────
   # (Cloud Build automatically pushes images listed in `images:` below)
 
@@ -84,10 +96,11 @@ steps:
         sed -i "s|cart-service:.*|cart-service:${COMMIT_SHA}|g" k8s/deployments/other-deployments.yaml
         sed -i "s|payment-service:.*|payment-service:${COMMIT_SHA}|g" k8s/deployments/other-deployments.yaml
         sed -i "s|api-gateway:.*|api-gateway:${COMMIT_SHA}|g" k8s/deployments/other-deployments.yaml
+        sed -i "s|frontend-service:.*|frontend-service:${COMMIT_SHA}|g" k8s/deployments/frontend-deployment.yaml
         git add k8s/deployments/
         git commit -m "ci: update image tags to ${COMMIT_SHA} [skip ci]"
         git push
-    waitFor: ['build-catalog', 'build-cart', 'build-payment', 'build-gateway']
+    waitFor: ['build-catalog', 'build-cart', 'build-payment', 'build-gateway', 'build-frontend']
 
 # Push all tagged images to GCR after build
 images:
@@ -99,6 +112,8 @@ images:
   - gcr.io/$PROJECT_ID/payment-service:latest
   - gcr.io/$PROJECT_ID/api-gateway:$COMMIT_SHA
   - gcr.io/$PROJECT_ID/api-gateway:latest
+  - gcr.io/$PROJECT_ID/frontend-service:$COMMIT_SHA
+  - gcr.io/$PROJECT_ID/frontend-service:latest
 
 options:
   machineType: 'E2_HIGHCPU_8'  # 8 vCPUs — faster parallel builds
