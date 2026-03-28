@@ -27,6 +27,9 @@
 
 set -euo pipefail
 
+# Ensure script is run from the project root
+cd "$(dirname "$0")/.."
+
 # ─── CONFIGURATION ────────────────────────────────────────────────────────────
 PROJECT_ID="my-project-32062-newsletter"
 REGION="us-central1"
