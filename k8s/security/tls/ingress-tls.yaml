@@ -48,7 +48,7 @@ spec:
                 name: payment-service
                 port:
                   number: 8002
-          - path: /(/|$)(.*)
+          - path: /()(.*)
             pathType: ImplementationSpecific
             backend:
               service:
