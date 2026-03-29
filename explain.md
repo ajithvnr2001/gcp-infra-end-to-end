@@ -149,3 +149,21 @@ done
 3. Run `terraform destroy` (now it has permission to delete).
 
 **To Say:** 'I never skip the 'apply' step when disabling protection. Terraform needs to reconcile the new 'unprotected' state with the Cloud Provider's API first before it will even attempt a destructive action.'"
+
+
+## Architectural Additions: Security, GitOps, and Ingress Theory
+
+### 1. The Reality of ArgoCD `selfHeal`
+ArgoCD's `selfHeal: true` configuration is paramount for enforcing Immutable Infrastructure. By continuously treating Git as the source of truth, it prevents unauthorized, ad-hoc `kubectl apply` manual tweaks against live servers ("Configuration Drift"). If an engineer patches a deployment in the cluster natively, ArgoCD instantly recognizes the diff and purges the unauthorized modification within seconds. 
+
+### 2. Ingress Regex Rewriting (`rewrite-target`)
+In a microservices paradigm, API endpoints are frequently clustered (e.g., `/api/catalog`, `/api/payment`). However, the backend applications themselves are usually programmed assuming they operate at their own root (`/`). The NGINX Ingress controller patches this via PCRE regex capture groups. Ex: `path: /api/catalog(/|$)(.*)` catches the remainder of the URL into parameter `$2`. By defining the annotation `nginx.ingress.kubernetes.io/rewrite-target: /$2`, NGINX mechanically truncates the `/api/catalog` prefix and passes the naked request to the internal gateway.
+
+### 3. GKE Autopilot Pod Security Standards (PSS)
+Serverless Kubernetes structures (like GKE Autopilot) enforce immense hardware-level safety regulations to prevent container escapes. Specifically, they utilize **Pod Security Admission (PSA)** to strictly block any container image demanding OS root privileges. Because traditional web servers (like `nginx` listening on default port 80) require root access to bind to restricted local ports under 1024, they instantly crash during Deployment. The architectural workaround is packaging **unprivileged** containers (running UID 1000) operating on high ports like `8080`.
+
+### 4. Zero-Trust Network Policies & Lateral Movement
+A profound best practice implemented in this cluster is the "Default Deny All" `NetworkPolicy`. By casting a net evaluating `podSelector: {}`, the cluster isolates all pods individually, effectively breaking internal East-West traffic. Engineers must deliberately stitch policies (like `frontend-netpol` or `catalog-netpol`) whitelisting microservice interactions. This mathematically neutralizes lateral network hopping; if a malicious actor cracks the Payment microservice, they cannot arbitrarily pivot and curl the internal Catalog database.
+
+### 5. Evaluating `kubectl port-forward` Anomalies
+`kubectl port-forward` is an exceptional debugging tool, but often generates "false positive" diagnoses. It creates a physical bridge traversing directly to the pod's `127.0.0.1` loopback namespace. By doing so, it utterly bypasses Kubernetes `Service` endpoints, `Ingress` controllers, and standard `NetworkPolicies`. If a pod serves traffic perfectly over port-forwarding, but times out (`504 Gateway Time-out`) over its public load balancer, the bug mathematically exists within the cluster's internal networking layer (Service configurations or Firewall drops).

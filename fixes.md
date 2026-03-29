@@ -449,3 +449,36 @@ GKE Autopilot: RollingUpdate (zero downtime)
     ├── new pod starts → health check passes → old pod terminated
     └── repeat per replica
 ```
+
+
+## [Phase 9] Unprivileged Frontend & Zero-Trust Network Debugging
+
+### 1. NGINX 308 Permanent Redirect over Port-Forward
+**Error/Symptom:** `curl http://localhost/` yielded an immediate `308 Permanent Redirect`.
+**Cause:** The `ingress-nginx` controller was configured with the annotation `nginx.ingress.kubernetes.io/force-ssl-redirect: "true"`. Running a basic `kubectl port-forward ... 80:80` dropped traffic because it lacked the TLS hook.
+**Fix:** Executed a dual-port port-forward mapping `80:80 443:443` and queried the API using `https://localhost/` with `-k` to accept self-signed certificates.
+
+### 2. FastAPI Missing Root Router (`{"detail":"Not Found"}`)
+**Error/Symptom:** The API Gateway correctly processed the request but returned a `404 Not Found` JSON object.
+**Cause:** While NGINX flawlessly forwarded the request, the actual `main.py` inside `api-gateway` lacked an `@app.get("/")` route definition, naturally resulting in a backend 404.
+**Fix:** Realized the Swagger UI was hosted at `/docs` natively by FastAPI.
+
+### 3. Ingress Regex Mathematical Pathing (`404 Not Found` NGINX HTML)
+**Error/Symptom:** Traversing to `https://localhost/docs` yielded a raw `404 Not Found nginx` HTML page.
+**Cause:** The root ingress rule used the regex `/(/|$)(.*)`, which mathematically dictated that the character immediately following the `/` must mathematically be another `/` or `End-Of-String`. Passing `/docs` broke this evaluation.
+**Fix:** Rewrote the Ingress spec for the root path to `path: /()(.*)` and `rewrite-target: /$2`, effectively allowing it to capture `/docs` as `$2` and routing it gracefully.
+
+### 4. ArgoCD Aggressive `selfHeal` Drift Correction
+**Error/Symptom:** `kubectl apply` commands configuring the new regex were being silently and instantly reverted in the cluster.
+**Cause:** ArgoCD's `selfHeal: true` flag monitors the cluster aggressively. Manually applying YAML via kubectl without pushing to GitHub creates "Drift", which ArgoCD instantly purges.
+**Fix:** Committed the `ingress-tls.yaml` fix to GitHub and physically ran `kubectl delete ingress` to force ArgoCD to hydrate a fresh manifest cleanly from the Git source.
+
+### 5. GKE Autopilot PodSecurity `runAsNonRoot` Escalation
+**Error/Symptom:** The `frontend-service` deployment remained at `0/2` replicas with the error: `violates PodSecurity "restricted:latest": runAsNonRoot != true`.
+**Cause:** GKE Autopilot utilizes Kubernetes Pod Security Admission (PSA) controllers that legally block containers attempting to run as `root` (UID 0), crippling the default `nginx:alpine` image.
+**Fix:** Swapped the Dockerfile base image to `nginxinc/nginx-unprivileged:alpine`. Updated `frontend-deployment.yaml` with `securityContext.runAsNonRoot: true` and exposed port `8080` (since unprivileged accounts cannot bind to ports <1024).
+
+### 6. Zero-Trust 'Default Deny' NetworkPolicy Blocking (`504 Gateway Time-out`)
+**Error/Symptom:** Browser yielded `504 Gateway Time-out nginx` while the frontend pods themselves were completely healthy and 100% operational.
+**Cause:** The `ecommerce` namespace contained a fundamental `default-deny-all` `NetworkPolicy` evaluating `podSelector: {}` (all pods). Even though the frontend had no specific NetworkPolicy applied to it, this blanket rule dropped the Ingress controller's inbound TCP handshake on port 8080.
+**Fix:** Appended `frontend-netpol` to `network-policies.yaml`, manually whitelisting Ingress protocol connections originating natively from `kubernetes.io/metadata.name: ingress-nginx`.
