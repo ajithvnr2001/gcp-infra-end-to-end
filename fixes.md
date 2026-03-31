@@ -493,3 +493,23 @@ GKE Autopilot: RollingUpdate (zero downtime)
 **Error/Symptom:** Running the automated pipeline setup script crashed with `ERROR: (gcloud.builds.triggers.create.github) INVALID_ARGUMENT: Request contains an invalid argument.`
 **Cause:** The 1st-generation GitHub trigger API via `gcloud` throws an obscure `INVALID_ARGUMENT` exception physically blocking creation if the target repository (e.g., `ajithvnr2001/gcp-infra-end-to-end`) has not been formally linked and authorized within the Google Cloud Console UI via the underlying Cloud Build GitHub App integration.
 **Fix:** The developer must explicitly finish Step 1 presented by the script—manually navigating to `https://console.cloud.google.com/cloud-build/triggers/connect` within the GCP Console and authorizing the repository to grant Google proper token access—before pressing ENTER to proceed and execute the CLI command.
+
+
+### 9. Prometheus & Grafana Installation Failures on GKE Autopilot
+**Error/Symptom:** The standard `kube-prometheus-stack` Helm chart failed to install, with pods stuck in `Init` or services forbidden from patching `kube-system`.
+**Cause:** GKE Autopilot is a "Serverless" Kubernetes environment with strict security and managed-namespace limitations. The default chart attempts to:
+1. Deploy `nodeExporter` using `hostNetwork` (Forbidden).
+2. Patch `CoreDNS` and other services in `kube-system` (Forbidden).
+3. Run an `admission-create` job that conflicts with Autopilot's internal admission controllers.
+**Fix:** Modified `monitoring/prometheus/values.yaml` to:
+1. Disable `nodeExporter`, `kubelet`, `coreDns`, `kubeControllerManager`, and `kubeScheduler` scraping.
+2. Disable `prometheusOperator.admissionWebhooks.enabled` to remove the stuck `admission-create` job.
+3. Set `tls.enabled: false` for the operator to prevent certificate-injection race conditions on the serverless control plane.
+
+### 10. OTel Collector `CrashLoopBackOff` (Configuration Unmarshaling)
+**Error/Symptom:** The OpenTelemetry Collector failed to start with `Error: failed to get config: cannot unmarshal the configuration`.
+**Cause:** The collector was using a deprecated `logging` exporter that has been removed/renamed in newer `otel-collector-contrib` images (latest). Furthermore, complex nested configurations in the `googlecloud` exporter's `trace` block were causing schema validation failures during unmarshaling.
+**Fix:** Simplified `k8s/tracing/otel-collector.yaml`:
+1. Replaced the deprecated `logging` exporter with the modern `debug` exporter.
+2. Flattened the `googlecloud` exporter configuration, removing the `trace` sub-block and providing the `project` ID as a top-level string.
+3. Validated that ArgoCD correctly synchronized the ConfigMap by committing the changes to Git rather than relying on manual `kubectl apply`.
