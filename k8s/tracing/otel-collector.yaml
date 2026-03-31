@@ -23,39 +23,17 @@ data:
 
     processors:
       batch:
-        timeout: 5s
-        send_batch_size: 1000
-      memory_limiter:
-        check_interval: 1s
-        limit_mib: 512
-      # Add service name, environment, version to all spans
-      resource:
-        attributes:
-          - key: deployment.environment
-            value: production
-            action: insert
-          - key: service.namespace
-            value: ecommerce
-            action: insert
 
     exporters:
-      # Send traces to GCP Cloud Trace
-      googlecloud:
-        project: YOUR_GCP_PROJECT_ID
-        trace:
-          bundle_delay_threshold: 2s
-          bundle_count_threshold: 200
-
-      # Also log to debug locally
-      logging:
+      debug:
         verbosity: normal
 
     service:
       pipelines:
         traces:
           receivers: [otlp]
-          processors: [memory_limiter, resource, batch]
-          exporters: [googlecloud]
+          processors: [batch]
+          exporters: [debug]
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -120,4 +98,4 @@ metadata:
   name: otel-collector-sa
   namespace: monitoring
   annotations:
-    iam.gke.io/gcp-service-account: otel-collector@YOUR_GCP_PROJECT_ID.iam.gserviceaccount.com
+    iam.gke.io/gcp-service-account: otel-collector@my-project-32062-newsletter.iam.gserviceaccount.com

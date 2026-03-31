@@ -6,6 +6,12 @@
 #   --namespace monitoring --create-namespace \
 #   --values monitoring/prometheus/values.yaml
 
+prometheusOperator:
+  admissionWebhooks:
+    enabled: false
+  tls:
+    enabled: false
+
 prometheus:
   prometheusSpec:
     retention: 15d
@@ -17,7 +23,6 @@ prometheus:
           resources:
             requests:
               storage: 20Gi
-
     # Scrape all pods with annotation: prometheus.io/scrape: "true"
     additionalScrapeConfigs:
       - job_name: ecommerce-services
@@ -181,7 +186,25 @@ alertmanager:
             text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
 
 nodeExporter:
-  enabled: true
+  enabled: false
+
+kubeProxy:
+  enabled: false
 
 kubeStateMetrics:
   enabled: true
+
+coreDns:
+  enabled: false
+
+kubeControllerManager:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+kubeEtcd:
+  enabled: false
+
+kubelet:
+  enabled: false
