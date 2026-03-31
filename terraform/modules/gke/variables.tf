@@ -26,3 +26,7 @@ variable "pods_range" {
 variable "services_range" {
   type = string
 }
+
+variable "zone" {
+  type = string
+}

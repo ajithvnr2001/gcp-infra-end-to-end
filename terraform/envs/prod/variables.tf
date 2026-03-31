@@ -16,3 +16,8 @@ variable "db_password" {
   type        = string
   sensitive   = true
 }
+
+variable "zone" {
+  description = "GCP Zone"
+  type        = string
+}

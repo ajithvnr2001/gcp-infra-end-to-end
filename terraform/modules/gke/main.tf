@@ -2,12 +2,9 @@
 
 resource "google_container_cluster" "primary" {
   name     = var.cluster_name
-  location = var.region
+  location = var.zone
   project  = var.project_id
 
-  # Standard GKE — Manual control over node pools
-  enable_autopilot = false
-  
   # Remove default node pool to replace with custom one
   remove_default_node_pool = true
   initial_node_count       = 1
@@ -50,17 +47,17 @@ resource "google_container_cluster" "primary" {
   }
 }
 
-# Custom Node Pool for Standard GKE
+# Custom Node Pool for Standard GKE (Zonal)
 resource "google_container_node_pool" "primary_nodes" {
   name       = "${var.cluster_name}-node-pool"
-  location   = var.region
+  location   = var.zone
   cluster    = google_container_cluster.primary.name
   project    = var.project_id
-  node_count = 2
+  node_count = 1
 
   autoscaling {
-    min_node_count = 2
-    max_node_count = 5
+    min_node_count = 1
+    max_node_count = 3
   }
 
   node_config {

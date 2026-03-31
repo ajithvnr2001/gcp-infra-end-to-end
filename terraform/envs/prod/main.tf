@@ -39,6 +39,7 @@ module "gke" {
   subnetwork      = module.vpc.subnet_id
   pods_range      = module.vpc.pods_range_name
   services_range  = module.vpc.services_range_name
+  zone            = var.zone
 }
 
 # ── Cloud SQL (PostgreSQL) ────────────────────────────────────────────────────
