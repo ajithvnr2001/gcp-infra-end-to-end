@@ -9,7 +9,7 @@
 graph TD
     User((External User)) -->|HTTPS| Ingress[NGINX Ingress Controller]
     
-    subgraph "GKE Autopilot (Private Cluster)"
+    subgraph "GKE Standard (Private Cluster)"
         Ingress -->|/| Frontend[Frontend Service - Vanilla JS]
         Ingress -->|/api| Gateway[API Gateway]
         
@@ -42,15 +42,15 @@ graph TD
 ### 🎨 Premium Frontend & Split-Routing
 *   **Vanilla JS Web App**: High-performance, zero-framework frontend with a modern glassmorphism design.
 *   **Split-Routing Ingress**: Implemented regex-based routing at the NGINX layer to direct `/api` traffic to the Gateway and all other traffic to the Frontend.
-*   **Security**: Runs as a **non-root user** on port 8080 to comply with GKE Autopilot security standards.
+*   **Security**: Runs as a **non-root user** on port 8080. This is an industry best practice and ensures compliance with the most restricted Kubernetes Pod Security Standards.
 
 ### 🛡️ Zero-Trust Security & Hardening
 *   **Identity**: Implemented **Workload Identity** for keyless, secure access to GCP services.
 *   **Network**: Enforced **default-deny-all** NetworkPolicies for microservice isolation.
 *   **Registry**: Automated vulnerability scanning via Google Artifact Registry.
 
-### 📊 Full-Stack Observability (Hardened for Autopilot)
-*   **Prometheus/Grafana**: Tailored Helm configuration that bypasses Autopilot's restricted host access.
+### 📊 Full-Stack Observability (Node-Level Visibility)
+*   **Prometheus/Grafana**: Full implementation of the `kube-prometheus-stack` with **NodeExporter** enabled, providing deep visibility into the underlying node hardware (CPU, Memory, Disk I/O).
 *   **Distributed Tracing**: End-to-end request tracing via OpenTelemetry and **GCP Cloud Trace**.
 *   **Dashboards**: Custom 10-panel "Ecommerce Overview" dashboard for SRE visibility.
 
