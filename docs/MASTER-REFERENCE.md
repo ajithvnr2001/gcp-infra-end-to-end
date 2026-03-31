@@ -1,14 +1,14 @@
-# 📘 Master Technical Reference: E-Commerce Architecture
+# 📘 Master Technical Reference: GKE Standard Architecture
 
 This document serves as the absolute source of truth for the technical design, security model, and operational logic of the project. It is designed for deep-dive technical reviews and architectural audits.
 
 ---
 
-## 🏗️ 1. GKE Autopilot: The Managed Control Plane
-Unlike Standard GKE, **Autopilot** is a fully managed "Serverless" Kubernetes offering.
-*   **Node Management**: Google manages the node lifecycle, patching, and bin-packing. We only define pod resource `requests`.
-*   **Security Baseline**: Autopilot enforces a "Locked Down" environment by default. It forbids privileged containers, `hostPath` mounts, and `hostNetwork` access.
-*   **Operational Impact**: This is why we used the `nginx-unprivileged` frontend and custom Prometheus values that avoid host-level metrics. It trades a small amount of control for massive operational reliability and security.
+## 🏗️ 1. GKE Standard: Managed Node Pools
+Unlike Autopilot's serverless model, **GKE Standard** gives us manual control over the underlying infrastructure.
+*   **Node Pools**: We define and manage specific node pools (e.g., `e2-standard-2`). This allows for precise resource bin-packing and cost optimization.
+*   **Full Control**: Standard GKE allows for privileged containers, node-level access, and custom machine types, which were restricted in Autopilot.
+*   **Operational Impact**: This migration enables full observability (NodeExporter) and admission webhooks, providing the "precision" needed for SRE operations.
 
 ---
 

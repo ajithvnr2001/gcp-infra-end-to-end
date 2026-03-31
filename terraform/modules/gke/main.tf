@@ -5,9 +5,13 @@ resource "google_container_cluster" "primary" {
   location = var.region
   project  = var.project_id
 
-  # Autopilot — Google manages nodes, scaling, upgrades automatically
-  enable_autopilot = true
+  # Standard GKE — Manual control over node pools
+  enable_autopilot = false
   
+  # Remove default node pool to replace with custom one
+  remove_default_node_pool = true
+  initial_node_count       = 1
+
   # Deletion protection MUST be false for easy cleanup in dev
   deletion_protection = false
 
@@ -43,5 +47,47 @@ resource "google_container_cluster" "primary" {
 
   logging_config {
     enable_components = ["SYSTEM_COMPONENTS"]
+  }
+}
+
+# Custom Node Pool for Standard GKE
+resource "google_container_node_pool" "primary_nodes" {
+  name       = "${var.cluster_name}-node-pool"
+  location   = var.region
+  cluster    = google_container_cluster.primary.name
+  project    = var.project_id
+  node_count = 2
+
+  autoscaling {
+    min_node_count = 2
+    max_node_count = 5
+  }
+
+  node_config {
+    preemptible  = false
+    machine_type = "e2-standard-2"
+
+    # Google recommend custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
+    service_account = "default"
+    oauth_scopes    = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
+
+    labels = {
+      env = "prod"
+    }
+
+    # Enable Workload Identity on nodes
+    workload_metadata_config {
+      mode = "GKE_METADATA"
+    }
+
+    metadata = {
+      disable-legacy-endpoints = "true"
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [node_count]
   }
 }

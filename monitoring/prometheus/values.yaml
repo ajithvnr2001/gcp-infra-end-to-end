@@ -8,9 +8,9 @@
 
 prometheusOperator:
   admissionWebhooks:
-    enabled: false
+    enabled: true
   tls:
-    enabled: false
+    enabled: true
 
 prometheus:
   prometheusSpec:
@@ -186,16 +186,16 @@ alertmanager:
             text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
 
 nodeExporter:
-  enabled: false
+  enabled: true
 
 kubeProxy:
-  enabled: false
+  enabled: true
 
 kubeStateMetrics:
   enabled: true
 
 coreDns:
-  enabled: false
+  enabled: true
 
 kubeControllerManager:
   enabled: false
@@ -207,4 +207,4 @@ kubeEtcd:
   enabled: false
 
 kubelet:
-  enabled: false
+  enabled: true

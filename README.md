@@ -1,4 +1,4 @@
-# 🛒 Production E-Commerce Platform on GKE Autopilot
+# 🛒 Production E-Commerce Platform on GKE Standard
 ### End-to-End GitOps · Zero-Trust Security · Full-Stack Observability · Disaster Recovery
 
 ---
@@ -64,6 +64,7 @@ graph TD
 
 | Document | Purpose |
 | :--- | :--- |
+| **[Standard vs Autopilot](file:///c:/Users/ajith/Downloads/interview%20qas/ecommerce-gcp-project%20(1)/ecommerce-gcp-project/docs/interview-prep/standard-vs-autopilot.md)** | Why we chose manual control (GKE Standard) over serverless. |
 | **[Interview Questions](file:///c:/Users/ajith/Downloads/interview%20qas/ecommerce-gcp-project%20(1)/ecommerce-gcp-project/docs/interview-prep/interview-questions.md)** | 20+ architectural Q&As based on this project. |
 | **[SRE Metrics Guide](file:///c:/Users/ajith/Downloads/interview%20qas/ecommerce-gcp-project%20(1)/ecommerce-gcp-project/docs/interview-prep/sre-metrics-guide.md)** | Deep dive into the Four Golden Signals. |
 | **[Observability Hardening](file:///c:/Users/ajith/Downloads/interview%20qas/ecommerce-gcp-project%20(1)/ecommerce-gcp-project/docs/OBSERVABILITY-HARDENING.md)** | Lessons learned implementing monitoring on Autopilot. |
@@ -104,7 +105,7 @@ kubectl get pods -n ecommerce
 
 | Layer | Technology |
 | :--- | :--- |
-| **Compute** | GKE Autopilot (Private Cluster) |
+| **Compute** | GKE Standard (Manual Node Pools) |
 | **Frontend** | Vanilla JS + NGINX Unprivileged |
 | **API Layer** | Python FastAPI (4 Microservices) |
 | **IaC** | Terraform (Modular) |
