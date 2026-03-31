@@ -9,7 +9,7 @@ This answer is designed to sound conversational and experienced. Instead of list
 
 ### **The Script**:
 
-"For this project, I implemented a split CI/CD architecture to keep the build process separate from the deployment logic. I used **GitHub Actions** for the CI part and **ArgoCD** for the CD part, following a GitOps model.
+"For this project, I implemented a split CI/CD architecture to keep the build process separate from the deployment logic. I used **GitHub Actions** for the CI part and **ArgoCD** for the CD part, following a GitOps model. I also built a custom **'Nuke & Rebuild' automation script** that can provision the entire global infrastructure from scratch in under 15 minutes."
 
 **1. The CI Side (GitHub Actions & Artifact Registry)**
 When someone pushes code to the repository, it triggers a GitHub Actions workflow. 
@@ -29,8 +29,9 @@ Instead of having GitHub Actions 'push' the code into the cluster using kubectl,
   sed -i "s|image: .*|image: gcr.io/${PROJECT_ID}/${SERVICE_NAME}:${GITHUB_SHA}|g" k8s/deployments.yaml
   ```
 - After the update, the CI pipeline automatically **commits and pushes** this change back to the Git repository. 
-- ArgoCD, which is running inside our GKE cluster, is constantly watching that Git repo. As soon as it sees the new commit with the updated tag, it pulls the change and performs a rolling update on the cluster. 
 - This is great for security because I don't have to store any sensitive cluster credentials in GitHub. The cluster pulls the data it needs using **GKE Workload Identity**, so it's a completely keyless and secure setup.
+- **Advanced Fix: Resolving Sync Race Conditions**: 
+  One challenging issue I solved was a race condition where ArgoCD would attempt to sync manifests before the **cert-manager** and **ingress-nginx** webhooks were fully ready. This caused 'Internal Error' and 'TLS unknown authority' failures. I refined our deployment pipeline to include a strategic 30-second delay between core platform installation and application synchronization, ensuring 100% reliable automated deployments."
 
 **3. Why this process?**
 The main reason I went with this setup is for **Reliability and Drift Detection**. If someone manually goes into the cluster and changes something, ArgoCD will immediately see that the cluster 'drifted' from what's in Git and will automatically sync it back. It makes the whole environment self-healing. Plus, if a new deployment causes an issue, a rollback is as simple as a Git revert, which ArgoCD handles instantly.

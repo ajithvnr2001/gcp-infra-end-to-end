@@ -68,3 +68,12 @@ Use these questions to demonstrate your deep understanding of the architecture, 
 
 **Q: Why couldn't you use the default `kube-prometheus-stack` values on Autopilot?**
 - **Solid Answer**: "The default chart tries to install `nodeExporter` (uses `hostNetwork`) and scrape `kube-system` components like CoreDNS. Autopilot manages these components for you and blocks user-level access to them for security. I had to explicitly **disable NodeExporter and Kubelet metrics** in the Helm values to allow the stack to install without permission errors."
+
+---
+
+## 🌪️ Disaster Recovery & Automation
+
+**Q: Your entire GCP project is deleted by accident. How fast can you recover?**
+- **Solid Answer**: "Because I followed an **Infra-as-Code (Terraform)** and **GitOps (ArgoCD)** model, we can recover in under 15 minutes. I built a custom `nuke-and-rebuild.sh` script that automates the entire process: it provisions the VPC/GKE/Cloud SQL via Terraform, bootstraps the platform tools (ingress, cert-manager), and triggers the ArgoCD Root App. The only manual step is a one-time DNS update on the external LoadBalancer."
+- **Follow-up**: "What about the database data?"
+  - **Answer**: "We have daily **Cloud SQL Automated Backups** and Point-in-Time Recovery (PITR) enabled. Using Terraform, we can restore the database instance to the last known good transaction. For Kubernetes state, since everything is in Git, ArgoCD will automatically redeploy all microservices as soon as the cluster is live."
