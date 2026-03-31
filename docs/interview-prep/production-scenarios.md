@@ -53,3 +53,18 @@ Use these questions to demonstrate your deep understanding of the architecture, 
 
 **Q: A user reports 'Some items are missing from the cart' but your dashboard is all Green. Where do you look?**
 - **Solid Answer**: "This sounds like a logic error or a 'Partial Success'. I'd jump into **Distributed Tracing (Cloud Trace)**. I'd filter for the user's Trace ID and look at the 'Waterfall'. I might see the Cart service returning a 200 but the internal 'AddItem' function showing a sub-span error or span attribute indicating a 'Silent Failure'. Tracing is critical for these 'Gremlin' bugs that metrics miss."
+
+---
+
+## 🏗️ GKE Autopilot & Platform Hardening
+
+**Q: You are running on GKE Autopilot. Why did you use an 'Unprivileged' NGINX image for the frontend?**
+- **Solid Answer**: "GKE Autopilot enforces **strict Pod Security Standards**. It forbids containers from running as root or binding to ports below 1024. Standard NGINX images run as root and use port 80. By using `nginxinc/nginx-unprivileged`, I ensured the pod complies with `Baseline` and `Restricted` security levels while still serving traffic on port 8080."
+- **Follow-up**: "What happens if a pod requests 20Gi of RAM but Autopilot only has 4Gi available?"
+  - **Answer**: "Autopilot is serverless; it will automatically provision a new node that matches the sum of pod resource requests. It removes the need for manual node pool management, which is why it's ideal for a 'Production' e-commerce site with fluctuating traffic."
+
+**Q: During deployment, your ArgoCD sync failed due to a `cert-manager` webhook timeout. How did you fix this race condition?**
+- **Solid Answer**: "This is a classic 'Dependency Race Condition'. When core platform tools like `cert-manager` are installed, their admission webhooks need a few seconds to initialize their internal CA and certificates. If ArgoCD immediately starts applying manifests that use these webhooks, the cluster rejects them with a 'TLS unknown authority' error. I fixed this by adding a **structural 30-second sleep** in the deployment script between the CRD installation and the application sync."
+
+**Q: Why couldn't you use the default `kube-prometheus-stack` values on Autopilot?**
+- **Solid Answer**: "The default chart tries to install `nodeExporter` (uses `hostNetwork`) and scrape `kube-system` components like CoreDNS. Autopilot manages these components for you and blocks user-level access to them for security. I had to explicitly **disable NodeExporter and Kubelet metrics** in the Helm values to allow the stack to install without permission errors."

@@ -17,7 +17,11 @@ ecommerce-gcp-project/
 │   │   └── tests/test_catalog.py
 │   ├── cart/                          ← Shopping cart (port 8001)
 │   ├── payment/                       ← Orders & payment (port 8002)
-│   └── api-gateway/                   ← Single entry point (port 8080)
+│   ├── api-gateway/                   ← Single entry point (port 8080)
+│   └── frontend/                      ← Premium Vanilla JS Web App (port 8080)
+│       ├── index.html                 ← Glassmorphism UI
+│       ├── app.js                     ← API Integration & State
+│       └── Dockerfile                 ← Unprivileged NGINX (Autopilot-Ready)
 │
 ├── terraform/                         ← GCP Infrastructure as Code
 │   ├── envs/prod/
@@ -43,11 +47,12 @@ ecommerce-gcp-project/
 │   ├── deployments/                   ← RollingUpdate, probes, resource limits
 │   ├── services/                      ← ClusterIP for all services
 │   ├── hpa/hpa.yaml                   ← Scale 2→20 pods, fast scaleUp
-│   ├── ingress/ingress.yaml           ← NGINX, rate limiting
+│   ├── ingress/                       ← Ingress-Nginx manifests
+│   │   └── ingress-tls.yaml          ← HTTPS + Split Routing (Frontend & API)
 │   ├── configmaps/                    ← Non-secret config per service
 │   ├── secrets/secrets-template.yaml  ← Template only — real secrets via ESO
 │   ├── monitoring/                    ← Prometheus scrape annotations patch
-│   └── tracing/otel-collector.yaml    ← OTel Collector → Cloud Trace
+│   └── tracing/otel-collector.yaml    ← OTel Collector → Cloud Trace (Hardened for Autopilot)
 │
 ├── argocd/apps.yaml                   ← GitOps: App-of-Apps, auto-sync, self-heal
 │
@@ -61,6 +66,7 @@ ecommerce-gcp-project/
 │   ├── prometheus/values.yaml        ← kube-prometheus-stack Helm values + alert rules
 │   ├── grafana/
 │   │   ├── dashboards/ecommerce-overview.json   ← 10-panel production dashboard
+│   │   └── ecommerce-dashboard.yaml             ← ConfigMap for Auto-Importing to Grafana
 │   │   └── provisioning/datasources/            ← Auto-wires Prometheus + Loki + Trace
 │   ├── loki/loki-values.yaml         ← Log aggregation, 30-day retention
 │   ├── slo/

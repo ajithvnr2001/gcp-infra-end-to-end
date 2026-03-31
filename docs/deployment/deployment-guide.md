@@ -171,6 +171,49 @@ helm install external-secrets external-secrets/external-secrets `
   --namespace external-secrets --create-namespace `
   --set installCRDs=true
 ```
+
+---
+
+## 🎨 Step 5.2: Deploying the Frontend (NGINX Unprivileged)
+The frontend is a premium Vanilla JS app served by an unprivileged NGINX container to comply with GKE Autopilot's strict security standards.
+
+1.  **Build & Push**: Handled automatically by `scripts/build.sh` or our CI/CD pipeline.
+2.  **Split-Routing Ingress**: The Ingress manifest in `k8s/security/tls/ingress-tls.yaml` implements regex-based split routing:
+    *   `/(.*)` -> `frontend-service` (Port 8080)
+    *   `/api/(.*)` -> `api-gateway` (Port 8080)
+
+```bash
+# Verify the ingress routing
+kubectl describe ingress ecommerce-ingress -n ecommerce
+```
+
+---
+
+## 📊 Step 7: Full Observability Stack (GKE Autopilot Hardened)
+GKE Autopilot forbids host-level metrics and access to `kube-system`. We use a custom-tailored `kube-prometheus-stack`.
+
+### 7.1 Prometheus & Grafana
+```powershell
+# 1. Add repo and update
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+
+# 2. Install with custom 'Autopilot-Safe' values
+helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack `
+  --namespace monitoring --create-namespace `
+  --values monitoring/prometheus/values.yaml
+```
+
+### 7.2 OpenTelemetry & Cloud Trace
+```bash
+# Apply the OTLP Collector manifest (Autopilot security-compliant)
+kubectl apply -f k8s/tracing/otel-collector.yaml
+```
+
+### 7.3 Access the Dashboards
+*   **Grafana**: `kubectl port-forward svc/kube-prometheus-stack-grafana -n monitoring 3000:80` (admin/admin)
+*   **Cloud Trace**: Visit the GCP Console to see distributed waterfall spans of your microservices.
+
 *   **What**: A bridge between Google Secret Manager and your K8s cluster.
 *   **Why**: Securely syncs your passwords/keys stored in GCP into the cluster without you having to manually run `kubectl create secret`.
 

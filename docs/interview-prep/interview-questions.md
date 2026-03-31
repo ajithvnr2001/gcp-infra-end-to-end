@@ -202,9 +202,33 @@
 > manual operational effort."
 
 **Q: How do you handle a high-severity production incident at 2am?**
+ 
+ > "Follow the runbook — never improvise under pressure. First stabilize:
+ > rollback or scale up to stop the bleeding. Then investigate with logs and traces.
+ > Communicate clearly in the incident channel — what's affected, what we're trying,
+ > ETA for resolution. Once resolved, blameless post-mortem within 48 hours
+ > focused on systemic fixes, not individual blame."
+ 
+---
 
-> "Follow the runbook — never improvise under pressure. First stabilize:
-> rollback or scale up to stop the bleeding. Then investigate with logs and traces.
-> Communicate clearly in the incident channel — what's affected, what we're trying,
-> ETA for resolution. Once resolved, blameless post-mortem within 48 hours
-> focused on systemic fixes, not individual blame."
+## 🎨 FRONTEND & USER EXPERIENCE
+
+**Q: Why did you choose Vanilla JS instead of React/Next.js for the ecommerce frontend?**
+
+> "For this project, I prioritized **performance and simplicity**. Vanilla JS has zero overhead and requires no complex build/hydration step, making it extremely fast for a serverless environment like GKE Autopilot. It demonstrated my ability to handle DOM manipulation and state management natively. For a larger team, I'd use Next.js for its ecosystem, but for a high-performance, containerized microservice, Vanilla JS + NGINX gives me total control over the bundle size and security."
+
+**Q: How did you secure your frontend container?**
+
+> "I used the `nginx-unprivileged` base image. Standard NGINX runs as root and binds to port 80, which GKE Autopilot blocks for security. My container runs as a non-root user (UID 101) and binds to port 8080. I also configured the NGINX `security_headers` to prevent Clickjacking, XSS, and MIME-type sniffing."
+
+---
+
+## 🛡️ PLATFORM HARDENING (ADVANCED)
+
+**Q: Tell me about a time you had to fix a complex race condition in your CI/CD pipeline.**
+
+> "When I first deployed the stack, ArgoCD failed to sync because the `cert-manager` admission webhook wasn't ready yet. The cluster was rejecting my `Certificate` and `Ingress` resources. I solved this by implementing a **30-second delay** in my `build.sh` script immediately after installing the platform controllers. This 'Cool-down' period ensures that the Kubernetes API server has fully registered the new webhooks before we attempt to sync the application manifests, preventing 'TLS Unknown Authority' errors."
+
+**Q: How did you implement monitoring on GKE Autopilot despite its restrictions?**
+
+> "Autopilot is 'Managed', so it blocks access to the `kube-system` namespace and host-level resources like `/proc` (needed by NodeExporter). I had to create a custom `values.yaml` for the Prometheus Helm chart that **disabled restricted components** while keeping application-level scraping enabled. I also used an OpenTelemetry Collector to 'offload' heavy trace processing to GCP Cloud Trace, keeping the cluster footprint small and complying with resource limits."
