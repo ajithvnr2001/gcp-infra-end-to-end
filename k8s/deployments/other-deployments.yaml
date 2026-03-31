@@ -30,6 +30,8 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
         fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: cart
           image: gcr.io/my-project-32062-newsletter/cart-service:latest
@@ -93,6 +95,8 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
         fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: payment
           image: gcr.io/my-project-32062-newsletter/payment-service:latest
@@ -156,6 +160,8 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
         fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: api-gateway
           image: gcr.io/my-project-32062-newsletter/api-gateway:latest

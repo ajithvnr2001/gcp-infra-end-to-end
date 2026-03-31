@@ -32,6 +32,8 @@ spec:
         runAsNonRoot: true
         runAsUser: 1000
         fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       containers:
         - name: catalog
           image: gcr.io/my-project-32062-newsletter/catalog-service:latest  # replaced by CI
