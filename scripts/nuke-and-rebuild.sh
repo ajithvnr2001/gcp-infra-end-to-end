@@ -231,6 +231,16 @@ helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx \
   --set controller.service.type=LoadBalancer \
   --wait --timeout 5m
 success "ingress-nginx installed."
+
+# 5d. Prometheus & Grafana
+log "Installing Prometheus & Grafana..."
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts --force-update
+helm repo update
+helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
+  --namespace monitoring --create-namespace \
+  --values monitoring/prometheus/values.yaml \
+  --wait --timeout 10m
+success "Prometheus & Grafana installed."
 log "Ingress LoadBalancer IP:"
 kubectl get svc -n ingress-nginx ingress-nginx-controller \
   -o jsonpath='{.status.loadBalancer.ingress[0].ip}' || warn "IP not assigned yet, check later."
