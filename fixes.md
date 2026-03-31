@@ -482,3 +482,14 @@ GKE Autopilot: RollingUpdate (zero downtime)
 **Error/Symptom:** Browser yielded `504 Gateway Time-out nginx` while the frontend pods themselves were completely healthy and 100% operational.
 **Cause:** The `ecommerce` namespace contained a fundamental `default-deny-all` `NetworkPolicy` evaluating `podSelector: {}` (all pods). Even though the frontend had no specific NetworkPolicy applied to it, this blanket rule dropped the Ingress controller's inbound TCP handshake on port 8080.
 **Fix:** Appended `frontend-netpol` to `network-policies.yaml`, manually whitelisting Ingress protocol connections originating natively from `kubernetes.io/metadata.name: ingress-nginx`.
+
+
+### 7. ArgoCD OutOfSync Degraded (cert-manager Webhook Race Condition)
+**Error/Symptom:** After a fresh `nuke-and-rebuild.sh`, the ArgoCD application immediately dropped into an `OutOfSync Degraded` state. The logs produced the error: `failed calling webhook "webhook.cert-manager.io"... tls: failed to verify certificate: x509: certificate signed by unknown authority`.
+**Cause:** A timing race condition occurred between Phase 4 and Phase 5 of `build.sh`. The script deployed the `cert-manager` Helm chart, and then immediately deployed ArgoCD. ArgoCD instantly attempted to create `Issuer` objects, triggering the `cert-manager-webhook`. However, the `cainjector` controller hadn't finished generating and publishing the TLS certificates into the webhook configuration, causing the API server to reject ArgoCD's manifest validation request.
+**Fix:** Introduced an explicit `sleep 30` delay into Phase 4 of `build.sh` immediately following the Helm installations. This gives the Admission Controllers sufficient time to gracefully initialize their internal Certificate Authorities before ArgoCD begins deploying resources.
+
+### 8. Cloud Build `setup-cloudbuild-trigger.sh` INVALID_ARGUMENT Failure
+**Error/Symptom:** Running the automated pipeline setup script crashed with `ERROR: (gcloud.builds.triggers.create.github) INVALID_ARGUMENT: Request contains an invalid argument.`
+**Cause:** The 1st-generation GitHub trigger API via `gcloud` throws an obscure `INVALID_ARGUMENT` exception physically blocking creation if the target repository (e.g., `ajithvnr2001/gcp-infra-end-to-end`) has not been formally linked and authorized within the Google Cloud Console UI via the underlying Cloud Build GitHub App integration.
+**Fix:** The developer must explicitly finish Step 1 presented by the script—manually navigating to `https://console.cloud.google.com/cloud-build/triggers/connect` within the GCP Console and authorizing the repository to grant Google proper token access—before pressing ENTER to proceed and execute the CLI command.

@@ -159,6 +159,9 @@ helm upgrade --install external-secrets external-secrets/external-secrets \
   --set installCRDs=true --wait --timeout 5m
 success "external-secrets installed."
 
+log "Waiting 30 seconds for cert-manager and external-secrets webhooks to fully populate their CA certificates..."
+sleep 30
+
 # ingress-nginx
 log "Installing ingress-nginx..."
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx --force-update
