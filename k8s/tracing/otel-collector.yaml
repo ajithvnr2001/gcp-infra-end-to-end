@@ -25,6 +25,8 @@ data:
       batch:
 
     exporters:
+      googlecloud:
+        project: "my-project-32062-newsletter"
       debug:
         verbosity: normal
 
@@ -33,7 +35,7 @@ data:
         traces:
           receivers: [otlp]
           processors: [batch]
-          exporters: [debug]
+          exporters: [googlecloud, debug]
 ---
 apiVersion: apps/v1
 kind: Deployment
