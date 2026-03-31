@@ -33,6 +33,7 @@ cd "$(dirname "$0")/.."
 # ─── CONFIGURATION ────────────────────────────────────────────────────────────
 PROJECT_ID="my-project-32062-newsletter"
 REGION="us-central1"
+ZONE="us-central1-a"
 CLUSTER_NAME="ecommerce-cluster"
 GIT_BRANCH="main"
 TERRAFORM_DIR="terraform/envs/prod"
@@ -131,7 +132,7 @@ success "Infrastructure provisioned: GKE cluster, Cloud SQL, VPC, networking."
 # ══════════════════════════════════════════════════════════════════════════════
 section "🔑 PHASE 3/8 — CONNECT KUBECTL TO GKE"
 gcloud container clusters get-credentials "$CLUSTER_NAME" \
-  --region "$REGION" --project "$PROJECT_ID"
+  --zone "$ZONE" --project "$PROJECT_ID"
 success "kubectl context: $(kubectl config current-context)"
 
 # ══════════════════════════════════════════════════════════════════════════════

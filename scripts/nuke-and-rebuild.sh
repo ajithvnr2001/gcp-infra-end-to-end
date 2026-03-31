@@ -36,6 +36,7 @@ cd "$(dirname "$0")/.."
 # ─── CONFIGURATION ────────────────────────────────────────────────────────────
 PROJECT_ID="my-project-32062-newsletter"
 REGION="us-central1"
+ZONE="us-central1-a"
 CLUSTER_NAME="ecommerce-cluster"
 REPO_URL="https://github.com/ajithvnr2001/gcp-infra-end-to-end"
 GIT_BRANCH="main"
@@ -98,7 +99,7 @@ if [ "$SKIP_NUKE" = "false" ]; then
   read -r confirm
   if [ "$confirm" = "yes" ]; then
     log "Nuking GKE cluster..."
-    gcloud container clusters delete "$CLUSTER_NAME" --region "$REGION" \
+    gcloud container clusters delete "$CLUSTER_NAME" --zone "$ZONE" \
       --project "$PROJECT_ID" --quiet 2>/dev/null || warn "GKE cluster not found, skipping."
 
     log "Nuking Cloud SQL..."
@@ -191,7 +192,7 @@ success "Terraform apply complete — GKE, Cloud SQL, VPC provisioned."
 section "🔑 PHASE 4: CONNECT TO GKE"
 log "Fetching GKE credentials..."
 gcloud container clusters get-credentials "$CLUSTER_NAME" \
-  --region "$REGION" --project "$PROJECT_ID"
+  --zone "$ZONE" --project "$PROJECT_ID"
 log "Current context: $(kubectl config current-context)"
 success "kubectl connected to GKE cluster."
 
@@ -339,7 +340,7 @@ wait_for_pods ecommerce 300
 section "🎉 COMPLETE — PLATFORM IS LIVE"
 echo ""
 echo -e "${GREEN}${BOLD}Infrastructure:${NC}"
-echo "  GKE Cluster:   ecommerce-cluster (us-central1)"
+echo "  GKE Cluster:   ecommerce-cluster ($ZONE)"
 echo "  Cloud SQL:     ecommerce-postgres"
 echo ""
 echo -e "${GREEN}${BOLD}Platform Controllers:${NC}"
