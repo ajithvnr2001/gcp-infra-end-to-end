@@ -132,6 +132,13 @@ grafana:
   persistence:
     enabled: true
     size: 5Gi
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
   grafana.ini:
     server:
       root_url: "http://localhost:3000"

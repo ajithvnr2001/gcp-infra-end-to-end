@@ -1,0 +1,49 @@
+mployment Type Full-time
+
+Budget : 7lpa
+
+Job Summary
+
+We are seeking a System Engineer with strong expertise in Amazon Web Services (AWS) to
+
+manage cloud infrastructure, system administration, CI/CD pipelines, and application
+
+deployments. The role requires ownership of server uptime, automation, security, and
+
+scalability in a production environment.
+
+Key Responsibilities
+
+Install, configure, and maintain Linux servers (Ubuntu/CentOS) on AWS EC2
+Manage users, SSH access, firewall rules, and OS-level security hardening
+Monitor system health, logs, disk, memory, and CPU utilization
+Troubleshoot system, network, and application-level issues
+Configure Nginx/Apache, SSL certificates, DNS, and reverse proxy
+Implement backups, recovery, and disaster recovery strategies
+Design and maintain CI/CD pipelines (GitHub Actions / GitLab CI / Jenkins)
+Automate deployments for Node.js, React, Python applications
+Manage AWS services: EC2, S3, RDS, IAM, VPC, Load Balancer, Auto Scaling
+Containerize applications using Docker
+Manage Node.js processes using PM2
+Set up monitoring & alerts using CloudWatch, Prometheus, Grafana
+Apply AWS security best practices (IAM roles, least privilege, secrets)
+Manage SSL, environment variables, and credentials securely
+Perform regular patching, updates, and vulnerability checks
+Ensure high availability, fault tolerance, and uptime (≥99.9%)
+Required Skills
+
+Must Have
+
+Strong Linux System Administration
+Hands-on AWS cloud experience
+CI/CD pipeline implementation
+Docker & containerization
+Git & version control
+Nginx / Apache
+Bash / Shell scripting
+Good to Have
+
+MySQL / MongoDB administration
+Cost optimization on AWS
+SaaS / EdTech production experience
+
