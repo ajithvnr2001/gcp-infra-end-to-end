@@ -9,7 +9,7 @@
 
 set -euo pipefail
 
-PROJECT_ID="my-project-32062-newsletter"
+PROJECT_ID="practic-test-only"
 REPO_NAME="gcp-infra-end-to-end"
 REPO_OWNER="ajithvnr2001"
 BRANCH="main"

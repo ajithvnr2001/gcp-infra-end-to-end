@@ -89,7 +89,7 @@ steps:
     args:
       - '-c'
       - |
-        git config user.email "cloudbuild@my-project-32062-newsletter.iam.gserviceaccount.com"
+        git config user.email "cloudbuild@practic-test-only.iam.gserviceaccount.com"
         git config user.name "Cloud Build"
         # Replace the image tags in deployment manifests with the new commit SHA
         sed -i "s|catalog-service:.*|catalog-service:${COMMIT_SHA}|g" k8s/deployments/catalog-deployment.yaml

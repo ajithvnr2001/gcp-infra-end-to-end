@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: gcr.io/my-project-32062-newsletter/frontend-service:latest
+        image: gcr.io/practic-test-only/frontend-service:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080

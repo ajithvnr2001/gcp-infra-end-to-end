@@ -83,7 +83,7 @@ gcloud CLI, Terraform, kubectl, helm, argocd CLI
 ### 2. Rapid Provisioning
 ```bash
 # 1. Set your Project ID
-export PROJECT_ID="my-project-32062-newsletter"
+export PROJECT_ID="practic-test-only"
 
 # 2. Run the Nuke & Rebuild automation (Pro-Level)
 chmod +x scripts/nuke-and-rebuild.sh

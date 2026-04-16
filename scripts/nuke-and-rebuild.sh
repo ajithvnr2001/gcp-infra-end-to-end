@@ -34,7 +34,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 # ─── CONFIGURATION ────────────────────────────────────────────────────────────
-PROJECT_ID="my-project-32062-newsletter"
+PROJECT_ID="practic-test-only"
 REGION="us-central1"
 ZONE="us-central1-a"
 CLUSTER_NAME="ecommerce-cluster"

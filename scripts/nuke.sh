@@ -17,7 +17,7 @@ set -euo pipefail
 # Ensure script is run from the project root
 cd "$(dirname "$0")/.."
 
-PROJECT_ID="my-project-32062-newsletter"
+PROJECT_ID="practic-test-only"
 REGION="us-central1"
 ENV="prod"
 

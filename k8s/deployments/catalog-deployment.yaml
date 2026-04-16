@@ -36,7 +36,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: catalog
-          image: gcr.io/my-project-32062-newsletter/catalog-service:latest  # replaced by CI
+          image: gcr.io/practic-test-only/catalog-service:latest  # replaced by CI
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

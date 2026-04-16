@@ -34,7 +34,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: cart
-          image: gcr.io/my-project-32062-newsletter/cart-service:latest
+          image: gcr.io/practic-test-only/cart-service:latest
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -99,7 +99,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: payment
-          image: gcr.io/my-project-32062-newsletter/payment-service:latest
+          image: gcr.io/practic-test-only/payment-service:latest
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -164,7 +164,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: api-gateway
-          image: gcr.io/my-project-32062-newsletter/api-gateway:latest
+          image: gcr.io/practic-test-only/api-gateway:latest
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:

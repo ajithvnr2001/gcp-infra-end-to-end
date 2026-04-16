@@ -26,7 +26,7 @@ data:
 
     exporters:
       googlecloud:
-        project: "my-project-32062-newsletter"
+        project: "practic-test-only"
       debug:
         verbosity: normal
 
@@ -100,4 +100,4 @@ metadata:
   name: otel-collector-sa
   namespace: monitoring
   annotations:
-    iam.gke.io/gcp-service-account: otel-collector@my-project-32062-newsletter.iam.gserviceaccount.com
+    iam.gke.io/gcp-service-account: otel-collector@practic-test-only.iam.gserviceaccount.com
