@@ -56,10 +56,18 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
   --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" \
   --role="roles/cloudbuild.builds.builder" --quiet
 
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" \
+  --role="roles/artifactregistry.admin" --quiet
+
 # Grant Compute Engine SA permissions (required for Cloud Build source staging)
 gcloud projects add-iam-policy-binding $PROJECT_ID \
   --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
   --role="roles/storage.admin" --quiet
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
+  --role="roles/artifactregistry.admin" --quiet
 
 echo ""
 echo "📄 Generating service account key..."
