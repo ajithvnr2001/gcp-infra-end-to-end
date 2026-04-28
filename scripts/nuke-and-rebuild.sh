@@ -11,7 +11,7 @@
 #   4.  CONNECT — fetches GKE credentials
 #   5.  HELM    — installs platform controllers (cert-manager, external-secrets, ingress-nginx)
 #   6.  ARGOCD  — installs ArgoCD and applies the Application manifest
-#   7.  BUILD   — builds and pushes all 5 Docker images to GCR via Cloud Build
+#   7.  BUILD   — builds and pushes all 5 Docker images to Artifact Registry via Cloud Build
 #   8.  GIT     — commits and pushes any pending changes to GitHub
 #   9.  VERIFY  — waits for ArgoCD sync and confirms pods are Running
 #
@@ -38,6 +38,8 @@ PROJECT_ID="practice-test1-494717"
 REGION="us-central1"
 ZONE="us-central1-a"
 CLUSTER_NAME="ecommerce-cluster"
+AR_REPOSITORY="ecommerce-docker"
+IMAGE_REGISTRY="${REGION}-docker.pkg.dev/${PROJECT_ID}/${AR_REPOSITORY}"
 REPO_URL="https://github.com/ajithvnr2001/gcp-infra-end-to-end"
 GIT_BRANCH="main"
 TERRAFORM_DIR="terraform/envs/prod"
@@ -155,7 +157,7 @@ gcloud services enable \
   cloudbuild.googleapis.com \
   monitoring.googleapis.com \
   logging.googleapis.com \
-  containerregistry.googleapis.com \
+  artifactregistry.googleapis.com \
   secretmanager.googleapis.com \
   compute.googleapis.com \
   servicenetworking.googleapis.com \
@@ -275,8 +277,31 @@ success "ArgoCD Application 'ecommerce-catalog' registered."
 # ══════════════════════════════════════════════════════════════════════════════
 # PHASE 7 — BUILD & PUSH DOCKER IMAGES
 # ══════════════════════════════════════════════════════════════════════════════
-section "🐳 PHASE 7: BUILD & PUSH DOCKER IMAGES TO GCR"
+section "🐳 PHASE 7: BUILD & PUSH DOCKER IMAGES TO ARTIFACT REGISTRY"
 log "Building all 5 service images via Cloud Build (parallel)..."
+
+log "Ensuring Artifact Registry Docker repository: ${AR_REPOSITORY} (${REGION})..."
+gcloud artifacts repositories create "$AR_REPOSITORY" \
+  --repository-format=docker \
+  --location="$REGION" \
+  --description="Docker images for ecommerce services" \
+  --project "$PROJECT_ID" \
+  --quiet 2>/dev/null || warn "Artifact Registry repository already exists."
+
+PROJECT_NUMBER=$(gcloud projects describe "$PROJECT_ID" --format="value(projectNumber)")
+log "Ensuring Cloud Build can push and GKE nodes can pull Artifact Registry images..."
+gcloud artifacts repositories add-iam-policy-binding "$AR_REPOSITORY" \
+  --location="$REGION" \
+  --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" \
+  --role="roles/artifactregistry.writer" \
+  --project "$PROJECT_ID" \
+  --quiet >/dev/null
+gcloud artifacts repositories add-iam-policy-binding "$AR_REPOSITORY" \
+  --location="$REGION" \
+  --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
+  --role="roles/artifactregistry.reader" \
+  --project "$PROJECT_ID" \
+  --quiet >/dev/null
 
 SERVICES=("catalog" "cart" "payment" "api-gateway" "frontend")
 IMAGE_NAMES=("catalog-service" "cart-service" "payment-service" "api-gateway" "frontend-service")
@@ -287,7 +312,7 @@ for i in "${!SERVICES[@]}"; do
   IMG="${IMAGE_NAMES[$i]}"
   log "Submitting Cloud Build for ${IMG}..."
   BUILD_ID=$(gcloud builds submit \
-    --tag "gcr.io/${PROJECT_ID}/${IMG}:latest" \
+    --tag "${IMAGE_REGISTRY}/${IMG}:latest" \
     "services/${SVC}/" \
     --project "$PROJECT_ID" \
     --async \
@@ -304,10 +329,10 @@ done
 
 # Verify images exist
 for IMG in "${IMAGE_NAMES[@]}"; do
-  gcloud container images describe "gcr.io/${PROJECT_ID}/${IMG}:latest" \
+  gcloud artifacts docker images describe "${IMAGE_REGISTRY}/${IMG}:latest" \
     --project "$PROJECT_ID" --quiet >/dev/null 2>&1 \
-    && success "✓ gcr.io/${PROJECT_ID}/${IMG}:latest" \
-    || warn "Image gcr.io/${PROJECT_ID}/${IMG}:latest not found — build may have failed"
+    && success "✓ ${IMAGE_REGISTRY}/${IMG}:latest" \
+    || warn "Image ${IMAGE_REGISTRY}/${IMG}:latest not found — build may have failed"
 done
 
 # ══════════════════════════════════════════════════════════════════════════════

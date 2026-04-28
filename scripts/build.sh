@@ -11,7 +11,7 @@
 #   3. Connect kubectl to GKE
 #   4. Helm: cert-manager, external-secrets, ingress-nginx
 #   5. ArgoCD install + Application
-#   6. Docker image builds → GCR (via Cloud Build, parallel)
+#   6. Docker image builds → Artifact Registry (via Cloud Build, parallel)
 #   7. Git commit + push
 #   8. Verify pods are Running
 #
@@ -35,6 +35,8 @@ PROJECT_ID="practice-test1-494717"
 REGION="us-central1"
 ZONE="us-central1-a"
 CLUSTER_NAME="ecommerce-cluster"
+AR_REPOSITORY="ecommerce-docker"
+IMAGE_REGISTRY="${REGION}-docker.pkg.dev/${PROJECT_ID}/${AR_REPOSITORY}"
 GIT_BRANCH="main"
 TERRAFORM_DIR="terraform/envs/prod"
 ARGOCD_NS="argocd"
@@ -97,7 +99,7 @@ gcloud services enable \
   cloudbuild.googleapis.com \
   monitoring.googleapis.com \
   logging.googleapis.com \
-  containerregistry.googleapis.com \
+  artifactregistry.googleapis.com \
   secretmanager.googleapis.com \
   compute.googleapis.com \
   servicenetworking.googleapis.com \
@@ -216,6 +218,29 @@ success "ArgoCD Application 'ecommerce-catalog' registered."
 # ══════════════════════════════════════════════════════════════════════════════
 section "🐳 PHASE 6/8 — BUILD & PUSH DOCKER IMAGES (PARALLEL)"
 
+log "Ensuring Artifact Registry Docker repository: ${AR_REPOSITORY} (${REGION})..."
+gcloud artifacts repositories create "$AR_REPOSITORY" \
+  --repository-format=docker \
+  --location="$REGION" \
+  --description="Docker images for ecommerce services" \
+  --project "$PROJECT_ID" \
+  --quiet 2>/dev/null || warn "Artifact Registry repository already exists."
+
+PROJECT_NUMBER=$(gcloud projects describe "$PROJECT_ID" --format="value(projectNumber)")
+log "Ensuring Cloud Build can push and GKE nodes can pull Artifact Registry images..."
+gcloud artifacts repositories add-iam-policy-binding "$AR_REPOSITORY" \
+  --location="$REGION" \
+  --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" \
+  --role="roles/artifactregistry.writer" \
+  --project "$PROJECT_ID" \
+  --quiet >/dev/null
+gcloud artifacts repositories add-iam-policy-binding "$AR_REPOSITORY" \
+  --location="$REGION" \
+  --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
+  --role="roles/artifactregistry.reader" \
+  --project "$PROJECT_ID" \
+  --quiet >/dev/null
+
 declare -A SERVICES=( [catalog]="catalog-service" [cart]="cart-service" \
                       [payment]="payment-service" [api-gateway]="api-gateway" \
                       [frontend]="frontend-service" )
@@ -225,7 +250,7 @@ for SVC in "${!SERVICES[@]}"; do
   IMG="${SERVICES[$SVC]}"
   log "Submitting Cloud Build for ${IMG}..."
   BUILD_ID=$(gcloud builds submit \
-    --tag "gcr.io/${PROJECT_ID}/${IMG}:latest" \
+    --tag "${IMAGE_REGISTRY}/${IMG}:latest" \
     "services/${SVC}/" \
     --project "$PROJECT_ID" \
     --async \
@@ -240,9 +265,9 @@ for BUILD_ID in "${BUILD_IDS[@]}"; do
 done
 
 for IMG in "${SERVICES[@]}"; do
-  gcloud container images describe "gcr.io/${PROJECT_ID}/${IMG}:latest" \
+  gcloud artifacts docker images describe "${IMAGE_REGISTRY}/${IMG}:latest" \
     --project "$PROJECT_ID" --quiet >/dev/null 2>&1 \
-    && success "gcr.io/${PROJECT_ID}/${IMG}:latest" \
+    && success "${IMAGE_REGISTRY}/${IMG}:latest" \
     || warn "Image ${IMG} not confirmed — check Cloud Build logs"
 done
 

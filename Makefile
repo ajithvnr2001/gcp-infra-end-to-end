@@ -6,7 +6,9 @@
 .PHONY: help local-up local-down test lint build push k8s-deploy argocd-sync status logs rollback
 
 PROJECT_ID  ?= your-gcp-project-id
-REGION      ?= asia-south1
+REGION      ?= us-central1
+AR_REPOSITORY ?= ecommerce-docker
+IMAGE_REGISTRY := $(REGION)-docker.pkg.dev/$(PROJECT_ID)/$(AR_REPOSITORY)
 SERVICES    := catalog cart payment api-gateway
 NAMESPACE   := ecommerce
 SHA         := $(shell git rev-parse --short HEAD)
@@ -55,14 +57,20 @@ lint:   ## Lint all services
 build:   ## Build all Docker images
 	@for svc in $(SERVICES); do \
 	  echo "Building $$svc:$(SHA)..."; \
-	  docker build -t gcr.io/$(PROJECT_ID)/$$svc:$(SHA) services/$$svc/; \
+	  docker build -t $(IMAGE_REGISTRY)/$$svc:$(SHA) services/$$svc/; \
 	done
 
-push:   ## Push all images to GCR
-	@gcloud auth configure-docker --quiet
+push:   ## Push all images to Artifact Registry
+	@gcloud auth configure-docker $(REGION)-docker.pkg.dev --quiet
+	@gcloud artifacts repositories create $(AR_REPOSITORY) \
+	  --repository-format=docker \
+	  --location=$(REGION) \
+	  --description="Docker images for ecommerce services" \
+	  --project=$(PROJECT_ID) \
+	  --quiet 2>/dev/null || true
 	@for svc in $(SERVICES); do \
 	  echo "Pushing $$svc:$(SHA)..."; \
-	  docker push gcr.io/$(PROJECT_ID)/$$svc:$(SHA); \
+	  docker push $(IMAGE_REGISTRY)/$$svc:$(SHA); \
 	done
 
 build-push: build push   ## Build and push all images

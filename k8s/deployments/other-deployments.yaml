@@ -34,7 +34,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: cart
-          image: gcr.io/practice-test1-494717/cart-service:latest
+          image: us-central1-docker.pkg.dev/practice-test1-494717/ecommerce-docker/cart-service:latest
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -100,7 +100,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: payment
-          image: gcr.io/practice-test1-494717/payment-service:latest
+          image: us-central1-docker.pkg.dev/practice-test1-494717/ecommerce-docker/payment-service:latest
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -166,7 +166,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: api-gateway
-          image: gcr.io/practice-test1-494717/api-gateway:latest
+          image: us-central1-docker.pkg.dev/practice-test1-494717/ecommerce-docker/api-gateway:latest
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:

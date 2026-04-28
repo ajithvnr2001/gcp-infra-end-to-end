@@ -17,17 +17,32 @@
 # (Set up via: gcloud builds triggers create github ...)
 
 steps:
+  # Ensure the Artifact Registry Docker repository exists before parallel builds.
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    id: ensure-artifact-registry
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        gcloud artifacts repositories create ecommerce-docker \
+          --repository-format=docker \
+          --location=us-central1 \
+          --description="Docker images for ecommerce services" \
+          --project="$PROJECT_ID" \
+          --quiet || true
+    waitFor: ['-']
+
   # ── Step 1: Build catalog-service ─────────────────────────────────────────
   - name: 'gcr.io/cloud-builders/docker'
     id: build-catalog
     args:
       - build
       - -t
-      - gcr.io/$PROJECT_ID/catalog-service:$COMMIT_SHA
+      - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/catalog-service:$COMMIT_SHA
       - -t
-      - gcr.io/$PROJECT_ID/catalog-service:latest
+      - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/catalog-service:latest
       - services/catalog/
-    waitFor: ['-']   # start immediately (parallel)
+    waitFor: ['ensure-artifact-registry']
 
   # ── Step 2: Build cart-service ─────────────────────────────────────────────
   - name: 'gcr.io/cloud-builders/docker'
@@ -35,11 +50,11 @@ steps:
     args:
       - build
       - -t
-      - gcr.io/$PROJECT_ID/cart-service:$COMMIT_SHA
+      - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/cart-service:$COMMIT_SHA
       - -t
-      - gcr.io/$PROJECT_ID/cart-service:latest
+      - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/cart-service:latest
       - services/cart/
-    waitFor: ['-']   # parallel with catalog
+    waitFor: ['ensure-artifact-registry']
 
   # ── Step 3: Build payment-service ─────────────────────────────────────────
   - name: 'gcr.io/cloud-builders/docker'
@@ -47,11 +62,11 @@ steps:
     args:
       - build
       - -t
-      - gcr.io/$PROJECT_ID/payment-service:$COMMIT_SHA
+      - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/payment-service:$COMMIT_SHA
       - -t
-      - gcr.io/$PROJECT_ID/payment-service:latest
+      - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/payment-service:latest
       - services/payment/
-    waitFor: ['-']   # parallel
+    waitFor: ['ensure-artifact-registry']
 
   # ── Step 4: Build api-gateway ─────────────────────────────────────────────
   - name: 'gcr.io/cloud-builders/docker'
@@ -59,11 +74,11 @@ steps:
     args:
       - build
       - -t
-      - gcr.io/$PROJECT_ID/api-gateway:$COMMIT_SHA
+      - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/api-gateway:$COMMIT_SHA
       - -t
-      - gcr.io/$PROJECT_ID/api-gateway:latest
+      - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/api-gateway:latest
       - services/api-gateway/
-    waitFor: ['-']   # parallel
+    waitFor: ['ensure-artifact-registry']
 
   # ── Step 4.5: Build frontend-service ──────────────────────────────────────
   - name: 'gcr.io/cloud-builders/docker'
@@ -71,13 +86,13 @@ steps:
     args:
       - build
       - -t
-      - gcr.io/$PROJECT_ID/frontend-service:$COMMIT_SHA
+      - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/frontend-service:$COMMIT_SHA
       - -t
-      - gcr.io/$PROJECT_ID/frontend-service:latest
+      - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/frontend-service:latest
       - services/frontend/
-    waitFor: ['-']   # parallel
+    waitFor: ['ensure-artifact-registry']
 
-  # ── Step 5: Push all images to GCR ────────────────────────────────────────
+  # ── Step 5: Push all images to Artifact Registry ──────────────────────────
   # (Cloud Build automatically pushes images listed in `images:` below)
 
   # ── Step 6: Update k8s manifests with new image tag ────────────────────────
@@ -102,18 +117,18 @@ steps:
         git push
     waitFor: ['build-catalog', 'build-cart', 'build-payment', 'build-gateway', 'build-frontend']
 
-# Push all tagged images to GCR after build
+# Push all tagged images to Artifact Registry after build
 images:
-  - gcr.io/$PROJECT_ID/catalog-service:$COMMIT_SHA
-  - gcr.io/$PROJECT_ID/catalog-service:latest
-  - gcr.io/$PROJECT_ID/cart-service:$COMMIT_SHA
-  - gcr.io/$PROJECT_ID/cart-service:latest
-  - gcr.io/$PROJECT_ID/payment-service:$COMMIT_SHA
-  - gcr.io/$PROJECT_ID/payment-service:latest
-  - gcr.io/$PROJECT_ID/api-gateway:$COMMIT_SHA
-  - gcr.io/$PROJECT_ID/api-gateway:latest
-  - gcr.io/$PROJECT_ID/frontend-service:$COMMIT_SHA
-  - gcr.io/$PROJECT_ID/frontend-service:latest
+  - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/catalog-service:$COMMIT_SHA
+  - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/catalog-service:latest
+  - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/cart-service:$COMMIT_SHA
+  - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/cart-service:latest
+  - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/payment-service:$COMMIT_SHA
+  - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/payment-service:latest
+  - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/api-gateway:$COMMIT_SHA
+  - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/api-gateway:latest
+  - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/frontend-service:$COMMIT_SHA
+  - us-central1-docker.pkg.dev/$PROJECT_ID/ecommerce-docker/frontend-service:latest
 
 options:
   machineType: 'E2_HIGHCPU_8'  # 8 vCPUs — faster parallel builds

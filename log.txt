@@ -1,152 +1,821 @@
-Fetching cluster endpoint and auth data.
-kubeconfig entry generated for ecommerce-cluster.
-✅ kubectl context: gke_practic-test-only_us-central1-a_ecommerce-cluster
+5b0->-r requirements.txt (line 15))
+  Downloading opentelemetry_util_http-0.45b0-py3-none-any.whl.metadata (2.4 kB)
+Requirement already satisfied: setuptools>=16.0 in /usr/local/lib/python3.11/site-packages (from opentelemetry-instrumentation==0.45b0->opentelemetry-instrumentation-fastapi==0.45b0->-r requirements.txt (line 15)) (79.0.1)
+Collecting wrapt<2.0.0,>=1.0.0 (from opentelemetry-instrumentation==0.45b0->opentelemetry-instrumentation-fastapi==0.45b0->-r requirements.txt (line 15))
+  Downloading wrapt-1.17.3-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.4 kB)
+Collecting asgiref~=3.0 (from opentelemetry-instrumentation-asgi==0.45b0->opentelemetry-instrumentation-fastapi==0.45b0->-r requirements.txt (line 15))
+  Downloading asgiref-3.11.1-py3-none-any.whl.metadata (9.3 kB)
+Collecting protobuf<5.0,>=3.19 (from opentelemetry-proto==1.24.0->opentelemetry-exporter-otlp-proto-grpc==1.24.0->-r requirements.txt (line 14))
+  Downloading protobuf-4.25.9-cp37-abi3-manylinux2014_x86_64.whl.metadata (541 bytes)      
+Collecting dnspython>=2.0.0 (from email_validator>=2.0.0->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading dnspython-2.8.0-py3-none-any.whl.metadata (5.7 kB)
+Collecting typer>=0.16.0 (from fastapi-cli>=0.0.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading typer-0.25.0-py3-none-any.whl.metadata (15 kB)
+Collecting rich-toolkit>=0.14.8 (from fastapi-cli>=0.0.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading rich_toolkit-0.19.7-py3-none-any.whl.metadata (1.0 kB)
+Collecting zipp>=0.5 (from importlib-metadata<=7.0,>=6.0->opentelemetry-api==1.24.0->-r requirements.txt (line 12))
+  Downloading zipp-3.23.1-py3-none-any.whl.metadata (3.6 kB)
+Collecting MarkupSafe>=2.0 (from jinja2>=2.11.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Collecting httptools>=0.5.0 (from uvicorn[standard]>=0.12.0->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading httptools-0.7.1-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+Collecting python-dotenv>=0.13 (from uvicorn[standard]>=0.12.0->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading python_dotenv-1.2.2-py3-none-any.whl.metadata (27 kB)
+Collecting pyyaml>=5.1 (from uvicorn[standard]>=0.12.0->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+Collecting uvloop!=0.15.0,!=0.15.1,>=0.14.0 (from uvicorn[standard]>=0.12.0->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading uvloop-0.22.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (4.9 kB)
+Collecting watchfiles>=0.13 (from uvicorn[standard]>=0.12.0->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading watchfiles-1.1.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+Collecting websockets>=10.4 (from uvicorn[standard]>=0.12.0->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading websockets-16.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.8 kB)
+Collecting rich>=13.7.1 (from rich-toolkit>=0.14.8->fastapi-cli>=0.0.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+Collecting shellingham>=1.3.0 (from typer>=0.16.0->fastapi-cli>=0.0.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading shellingham-1.5.4-py2.py3-none-any.whl.metadata (3.5 kB)
+Collecting annotated-doc>=0.0.2 (from typer>=0.16.0->fastapi-cli>=0.0.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading annotated_doc-0.0.4-py3-none-any.whl.metadata (6.6 kB)
+Collecting markdown-it-py>=2.2.0 (from rich>=13.7.1->rich-toolkit>=0.14.8->fastapi-cli>=0.0.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading markdown_it_py-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich>=13.7.1->rich-toolkit>=0.14.8->fastapi-cli>=0.0.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=13.7.1->rich-toolkit>=0.14.8->fastapi-cli>=0.0.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Downloading fastapi-0.111.0-py3-none-any.whl (91 kB)
+   ???????????????????????????????????????? 92.0/92.0 kB 173.3 MB/s eta 0:00:00
+Downloading uvicorn-0.30.1-py3-none-any.whl (62 kB)
+   ???????????????????????????????????????? 62.4/62.4 kB 205.5 MB/s eta 0:00:00
+Downloading pydantic-2.7.1-py3-none-any.whl (409 kB)
+   ??????????????????????????????????????? 409.3/409.3 kB 141.4 MB/s eta 0:00:00
+Downloading httpx-0.27.0-py3-none-any.whl (75 kB)
+   ???????????????????????????????????????? 75.6/75.6 kB 221.9 MB/s eta 0:00:00
+Downloading pytest-8.2.2-py3-none-any.whl (339 kB)
+   ??????????????????????????????????????? 339.9/339.9 kB 209.9 MB/s eta 0:00:00
+Downloading pytest_asyncio-0.23.7-py3-none-any.whl (17 kB)
+Downloading prometheus_client-0.20.0-py3-none-any.whl (54 kB)
+   ???????????????????????????????????????? 54.5/54.5 kB 211.3 MB/s eta 0:00:00
+Downloading opentelemetry_api-1.24.0-py3-none-any.whl (60 kB)
+   ???????????????????????????????????????? 60.1/60.1 kB 206.8 MB/s eta 0:00:00
+Downloading opentelemetry_sdk-1.24.0-py3-none-any.whl (106 kB)
+   ??????????????????????????????????????? 106.1/106.1 kB 142.3 MB/s eta 0:00:00
+Downloading opentelemetry_exporter_otlp_proto_grpc-1.24.0-py3-none-any.whl (18 kB)
+Downloading opentelemetry_instrumentation_fastapi-0.45b0-py3-none-any.whl (11 kB)
+Downloading opentelemetry_instrumentation_httpx-0.45b0-py3-none-any.whl (12 kB)
+Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+   ???????????????????????????????????????? 78.8/78.8 kB 219.1 MB/s eta 0:00:00
+Downloading opentelemetry_exporter_otlp_proto_common-1.24.0-py3-none-any.whl (17 kB)       
+Downloading opentelemetry_instrumentation-0.45b0-py3-none-any.whl (28 kB)
+Downloading opentelemetry_instrumentation_asgi-0.45b0-py3-none-any.whl (14 kB)
+Downloading opentelemetry_proto-1.24.0-py3-none-any.whl (50 kB)
+   ???????????????????????????????????????? 50.8/50.8 kB 189.5 MB/s eta 0:00:00
+Downloading opentelemetry_semantic_conventions-0.45b0-py3-none-any.whl (36 kB)
+Downloading opentelemetry_util_http-0.45b0-py3-none-any.whl (6.9 kB)
+Downloading pydantic_core-2.18.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+   ???????????????????????????????????????? 2.1/2.1 MB 237.4 MB/s eta 0:00:00
+Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+Downloading click-8.3.3-py3-none-any.whl (110 kB)
+   ??????????????????????????????????????? 110.5/110.5 kB 244.0 MB/s eta 0:00:00
+Downloading deprecated-1.3.1-py2.py3-none-any.whl (11 kB)
+Downloading email_validator-2.3.0-py3-none-any.whl (35 kB)
+Downloading fastapi_cli-0.0.24-py3-none-any.whl (12 kB)
+Downloading googleapis_common_protos-1.74.0-py3-none-any.whl (300 kB)
+   ??????????????????????????????????????? 300.7/300.7 kB 269.8 MB/s eta 0:00:00
+Downloading grpcio-1.80.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (6.8 MB)
+   ???????????????????????????????????????? 6.8/6.8 MB 187.1 MB/s eta 0:00:00
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading idna-3.13-py3-none-any.whl (68 kB)
+   ???????????????????????????????????????? 68.6/68.6 kB 178.2 MB/s eta 0:00:00
+Downloading importlib_metadata-7.0.0-py3-none-any.whl (23 kB)
+Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+   ??????????????????????????????????????? 134.9/134.9 kB 238.5 MB/s eta 0:00:00
+Downloading orjson-3.11.8-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (133 kB)
+   ??????????????????????????????????????? 133.6/133.6 kB 242.0 MB/s eta 0:00:00
+Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+Downloading python_multipart-0.0.27-py3-none-any.whl (29 kB)
+Downloading starlette-0.37.2-py3-none-any.whl (71 kB)
+   ???????????????????????????????????????? 71.9/71.9 kB 229.7 MB/s eta 0:00:00
+Downloading anyio-4.13.0-py3-none-any.whl (114 kB)
+   ??????????????????????????????????????? 114.4/114.4 kB 244.9 MB/s eta 0:00:00
+Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+   ???????????????????????????????????????? 44.6/44.6 kB 198.0 MB/s eta 0:00:00
+Downloading ujson-5.12.0-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (57 kB)
+   ???????????????????????????????????????? 57.4/57.4 kB 148.2 MB/s eta 0:00:00
+Downloading certifi-2026.4.22-py3-none-any.whl (135 kB)
+   ??????????????????????????????????????? 135.7/135.7 kB 249.2 MB/s eta 0:00:00
+Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Downloading packaging-26.2-py3-none-any.whl (100 kB)
+   ???????????????????????????????????????? 100.2/100.2 kB 66.3 MB/s eta 0:00:00
+Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+Downloading asgiref-3.11.1-py3-none-any.whl (24 kB)
+Downloading dnspython-2.8.0-py3-none-any.whl (331 kB)
+   ??????????????????????????????????????? 331.1/331.1 kB 272.5 MB/s eta 0:00:00
+Downloading httptools-0.7.1-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (456 kB)
+   ??????????????????????????????????????? 456.6/456.6 kB 236.4 MB/s eta 0:00:00
+Downloading markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Downloading protobuf-4.25.9-cp37-abi3-manylinux2014_x86_64.whl (295 kB)
+   ??????????????????????????????????????? 295.2/295.2 kB 261.6 MB/s eta 0:00:00
+Downloading python_dotenv-1.2.2-py3-none-any.whl (22 kB)
+Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (806 kB)
+   ??????????????????????????????????????? 806.6/806.6 kB 280.1 MB/s eta 0:00:00
+Downloading rich_toolkit-0.19.7-py3-none-any.whl (32 kB)
+Downloading typer-0.25.0-py3-none-any.whl (55 kB)
+   ???????????????????????????????????????? 56.0/56.0 kB 143.9 MB/s eta 0:00:00
+Downloading uvloop-0.22.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (3.8 MB)
+   ???????????????????????????????????????? 3.8/3.8 MB 233.6 MB/s eta 0:00:00
+Downloading watchfiles-1.1.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (456 kB)
+   ??????????????????????????????????????? 456.1/456.1 kB 267.6 MB/s eta 0:00:00
+Downloading websockets-16.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (184 kB)
+   ??????????????????????????????????????? 184.6/184.6 kB 252.9 MB/s eta 0:00:00
+Downloading wrapt-1.17.3-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (82 kB)
+   ???????????????????????????????????????? 82.4/82.4 kB 92.9 MB/s eta 0:00:00
+Downloading zipp-3.23.1-py3-none-any.whl (10 kB)
+Downloading annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
+Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+   ??????????????????????????????????????? 310.7/310.7 kB 222.5 MB/s eta 0:00:00
+Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+Downloading markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
+   ???????????????????????????????????????? 87.3/87.3 kB 235.8 MB/s eta 0:00:00
+Downloading pygments-2.20.0-py3-none-any.whl (1.2 MB)
+   ???????????????????????????????????????? 1.2/1.2 MB 157.2 MB/s eta 0:00:00
+Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Installing collected packages: zipp, wrapt, websockets, uvloop, ujson, typing-extensions, sniffio, shellingham, pyyaml, python-multipart, python-dotenv, pygments, protobuf, prometheus-client, pluggy, packaging, orjson, opentelemetry-util-http, opentelemetry-semantic-conventions, mdurl, MarkupSafe, iniconfig, idna, httptools, h11, dnspython, click, certifi, asgiref, annotated-types, annotated-doc, uvicorn, pytest, pydantic-core, opentelemetry-proto, markdown-it-py, jinja2, importlib-metadata, httpcore, grpcio, googleapis-common-protos, email_validator, deprecated, anyio, watchfiles, starlette, rich, pytest-asyncio, pydantic, opentelemetry-exporter-otlp-proto-common, opentelemetry-api, httpx, typer, rich-toolkit, opentelemetry-sdk, opentelemetry-instrumentation, opentelemetry-instrumentation-httpx, opentelemetry-instrumentation-asgi, opentelemetry-exporter-otlp-proto-grpc, fastapi-cli, opentelemetry-instrumentation-fastapi, fastapi
+  WARNING: The script websockets is installed in '/root/.local/bin' which is not on PATH.  
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script dotenv is installed in '/root/.local/bin' which is not on PATH.      
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script pygmentize is installed in '/root/.local/bin' which is not on PATH.  
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script uvicorn is installed in '/root/.local/bin' which is not on PATH.     
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The scripts py.test and pytest are installed in '/root/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script markdown-it is installed in '/root/.local/bin' which is not on PATH. 
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script email_validator is installed in '/root/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script watchfiles is installed in '/root/.local/bin' which is not on PATH.  
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script httpx is installed in '/root/.local/bin' which is not on PATH.       
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script typer is installed in '/root/.local/bin' which is not on PATH.       
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The scripts opentelemetry-bootstrap and opentelemetry-instrument are installed in '/root/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+Successfully installed MarkupSafe-3.0.3 annotated-doc-0.0.4 annotated-types-0.7.0 anyio-4.13.0 asgiref-3.11.1 certifi-2026.4.22 click-8.3.3 deprecated-1.3.1 dnspython-2.8.0 email_validator-2.3.0 fastapi-0.111.0 fastapi-cli-0.0.24 googleapis-common-protos-1.74.0 grpcio-1.80.0 h11-0.16.0 httpcore-1.0.9 httptools-0.7.1 httpx-0.27.0 idna-3.13 importlib-metadata-7.0.0 iniconfig-2.3.0 jinja2-3.1.6 markdown-it-py-4.0.0 mdurl-0.1.2 opentelemetry-api-1.24.0 opentelemetry-exporter-otlp-proto-common-1.24.0 opentelemetry-exporter-otlp-proto-grpc-1.24.0 opentelemetry-instrumentation-0.45b0 opentelemetry-instrumentation-asgi-0.45b0 opentelemetry-instrumentation-fastapi-0.45b0 opentelemetry-instrumentation-httpx-0.45b0 opentelemetry-proto-1.24.0 opentelemetry-sdk-1.24.0 opentelemetry-semantic-conventions-0.45b0 opentelemetry-util-http-0.45b0 orjson-3.11.8 packaging-26.2 pluggy-1.6.0 prometheus-client-0.20.0 protobuf-4.25.9 pydantic-2.7.1 pydantic-core-2.18.2 pygments-2.20.0 pytest-8.2.2 pytest-asyncio-0.23.7 python-dotenv-1.2.2 python-multipart-0.0.27 pyyaml-6.0.3 rich-15.0.0 rich-toolkit-0.19.7 shellingham-1.5.4 sniffio-1.3.1 starlette-0.37.2 typer-0.25.0 typing-extensions-4.15.0 ujson-5.12.0 uvicorn-0.30.1 uvloop-0.22.1 watchfiles-1.1.1 websockets-16.0 wrapt-1.17.3 zipp-3.23.1
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+
+[notice] A new release of pip is available: 24.0 -> 26.1
+[notice] To update, run: pip install --upgrade pip
+Removing intermediate container edfeb67b01cd
+ ---> 046f0691f1b2
+Step 5/16 : FROM python:3.11-slim
+ ---> 1eee6fcc4d86
+Step 6/16 : WORKDIR /app
+ ---> Running in c3f39e66552d
+Removing intermediate container c3f39e66552d
+ ---> a8e87a4245fa
+Step 7/16 : RUN adduser --disabled-password --no-create-home appuser
+ ---> Running in 68bff80d6fe2
+Changing the user information for appuser
+Enter the new value, or press ENTER for the default
+        Full Name []:   Room Number []:         Work Phone []:  Home Phone []:  Other []: Use of uninitialized value $answer in chop at /usr/sbin/adduser line 992.
+Use of uninitialized value $answer in pattern match (m//) at /usr/sbin/adduser line 993.   
+Use of uninitialized value $answer in pattern match (m//) at /usr/sbin/adduser line 994.   
+Is the information correct? [Y/n] Removing intermediate container 68bff80d6fe2
+ ---> 77a5f0ebd92d
+Step 8/16 : COPY --from=builder /root/.local /home/appuser/.local
+ ---> c639f84ba37e
+Step 9/16 : COPY . .
+ ---> 52db2c445212
+Step 10/16 : RUN chown -R appuser:appuser /app
+ ---> Running in 14ae40d22f1b
+Removing intermediate container 14ae40d22f1b
+ ---> 9b393f9dbac5
+Step 11/16 : USER appuser
+ ---> Running in 9bfbc8482ffc
+Removing intermediate container 9bfbc8482ffc
+ ---> 147612bd00f9
+Step 12/16 : ENV PATH=/home/appuser/.local/bin:$PATH
+ ---> Running in 2c2549a05eb9
+Removing intermediate container 2c2549a05eb9
+ ---> beb9fb22d930
+Step 13/16 : ENV PYTHONUNBUFFERED=1
+ ---> Running in 322114e41539
+Removing intermediate container 322114e41539
+ ---> e27da5bf9cd9
+Step 14/16 : EXPOSE 8000
+ ---> Running in 0c2e10d8b9e4
+Removing intermediate container 0c2e10d8b9e4
+ ---> f2e54202845c
+Step 15/16 : HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3   CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"   
+ ---> Running in 37171d013665
+Removing intermediate container 37171d013665
+ ---> 4aeb34828c9d
+Step 16/16 : CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+ ---> Running in 53212fe5e3bf
+Removing intermediate container 53212fe5e3bf
+ ---> 78d6487db665
+Successfully built 78d6487db665
+Successfully tagged gcr.io/practice-test1-494717/catalog-service:latest
+PUSH
+Pushing gcr.io/practice-test1-494717/catalog-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/catalog-service]
+4f59a6db0665: Preparing
+250bb4e0cbfb: Preparing
+2964549e23b9: Preparing
+11b4f79787d1: Preparing
+6c0c0fea9abd: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/catalog-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/catalog-service]
+4f59a6db0665: Preparing
+250bb4e0cbfb: Preparing
+2964549e23b9: Preparing
+11b4f79787d1: Preparing
+6c0c0fea9abd: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/catalog-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/catalog-service]
+4f59a6db0665: Preparing
+250bb4e0cbfb: Preparing
+2964549e23b9: Preparing
+11b4f79787d1: Preparing
+6c0c0fea9abd: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/catalog-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/catalog-service]
+4f59a6db0665: Preparing
+250bb4e0cbfb: Preparing
+2964549e23b9: Preparing
+11b4f79787d1: Preparing
+6c0c0fea9abd: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/catalog-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/catalog-service]
+4f59a6db0665: Preparing
+250bb4e0cbfb: Preparing
+2964549e23b9: Preparing
+11b4f79787d1: Preparing
+6c0c0fea9abd: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/catalog-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/catalog-service]
+4f59a6db0665: Preparing
+250bb4e0cbfb: Preparing
+2964549e23b9: Preparing
+11b4f79787d1: Preparing
+6c0c0fea9abd: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/catalog-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/catalog-service]
+4f59a6db0665: Preparing
+250bb4e0cbfb: Preparing
+2964549e23b9: Preparing
+11b4f79787d1: Preparing
+6c0c0fea9abd: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/catalog-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/catalog-service]
+4f59a6db0665: Preparing
+250bb4e0cbfb: Preparing
+2964549e23b9: Preparing
+11b4f79787d1: Preparing
+6c0c0fea9abd: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/catalog-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/catalog-service]
+4f59a6db0665: Preparing
+250bb4e0cbfb: Preparing
+2964549e23b9: Preparing
+11b4f79787d1: Preparing
+6c0c0fea9abd: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/catalog-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/catalog-service]
+4f59a6db0665: Preparing
+250bb4e0cbfb: Preparing
+2964549e23b9: Preparing
+11b4f79787d1: Preparing
+6c0c0fea9abd: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+ERROR: failed to push because we ran out of retries.
+ERROR
+ERROR: error pushing image "gcr.io/practice-test1-494717/catalog-service:latest": retry budget exhausted (10 attempts): step exited with non-zero status: 1
+-------------------------------------------------------------------------------------------
+----------------------------------- REMOTE BUILD OUTPUT -----------------------------------
+starting build "aa0f2ffd-efc1-4353-a328-03c826e97efb"
+
+FETCHSOURCE
+Fetching storage object: gs://practice-test1-494717_cloudbuild/source/1777402243.015945-3fc17319f576449ba2955f6d80db7a59.tgz#1777402244429748
+Copying gs://practice-test1-494717_cloudbuild/source/1777402243.015945-3fc17319f576449ba2955f6d80db7a59.tgz#1777402244429748...
+/ [1 files][  8.3 KiB/  8.3 KiB]
+Operation completed over 1 objects/8.3 KiB.
+BUILD
+Already have image (with digest): gcr.io/cloud-builders/gcb-internal
+Sending build context to Docker daemon  30.21kB
+Step 1/15 : FROM python:3.11-slim AS builder
+3.11-slim: Pulling from library/python
+3531af2bc2a9: Pulling fs layer
+91ff8760033c: Pulling fs layer
+f3ba2250c524: Pulling fs layer
+7ccd73948dde: Pulling fs layer
+7ccd73948dde: Verifying Checksum
+7ccd73948dde: Download complete
+91ff8760033c: Verifying Checksum
+91ff8760033c: Download complete
+f3ba2250c524: Download complete
+3531af2bc2a9: Verifying Checksum
+3531af2bc2a9: Download complete
+3531af2bc2a9: Pull complete
+91ff8760033c: Pull complete
+f3ba2250c524: Pull complete
+7ccd73948dde: Pull complete
+Digest: sha256:6d85378d88a19cd4d76079817532d62232be95757cb45945a99fec8e8084b9c2
+Status: Downloaded newer image for python:3.11-slim
+ ---> 1eee6fcc4d86
+Step 2/15 : WORKDIR /app
+ ---> Running in f0380a33673e
+Removing intermediate container f0380a33673e
+ ---> b42d0fd80de2
+Step 3/15 : COPY requirements.txt .
+ ---> 122b90b73f10
+Step 4/15 : RUN pip install --no-cache-dir --user -r requirements.txt
+ ---> Running in f89485e8e8e9
+Collecting fastapi==0.111.0 (from -r requirements.txt (line 1))
+  Downloading fastapi-0.111.0-py3-none-any.whl.metadata (25 kB)
+Collecting uvicorn==0.30.1 (from -r requirements.txt (line 2))
+  Downloading uvicorn-0.30.1-py3-none-any.whl.metadata (6.3 kB)
+Collecting pydantic==2.7.1 (from -r requirements.txt (line 3))
+  Downloading pydantic-2.7.1-py3-none-any.whl.metadata (107 kB)
+     ?????????????????????????????????????? 107.3/107.3 kB 12.3 MB/s eta 0:00:00
+Collecting httpx==0.27.0 (from -r requirements.txt (line 4))
+  Downloading httpx-0.27.0-py3-none-any.whl.metadata (7.2 kB)
+Collecting pytest==8.2.2 (from -r requirements.txt (line 5))
+  Downloading pytest-8.2.2-py3-none-any.whl.metadata (7.6 kB)
+Collecting pytest-asyncio==0.23.7 (from -r requirements.txt (line 6))
+  Downloading pytest_asyncio-0.23.7-py3-none-any.whl.metadata (3.9 kB)
+Collecting prometheus-client==0.20.0 (from -r requirements.txt (line 9))
+  Downloading prometheus_client-0.20.0-py3-none-any.whl.metadata (1.8 kB)
+Collecting opentelemetry-api==1.24.0 (from -r requirements.txt (line 12))
+  Downloading opentelemetry_api-1.24.0-py3-none-any.whl.metadata (1.3 kB)
+Collecting opentelemetry-sdk==1.24.0 (from -r requirements.txt (line 13))
+  Downloading opentelemetry_sdk-1.24.0-py3-none-any.whl.metadata (1.4 kB)
+Collecting opentelemetry-exporter-otlp-proto-grpc==1.24.0 (from -r requirements.txt (line 14))
+  Downloading opentelemetry_exporter_otlp_proto_grpc-1.24.0-py3-none-any.whl.metadata (2.2 kB)
+Collecting opentelemetry-instrumentation-fastapi==0.45b0 (from -r requirements.txt (line 15))
+  Downloading opentelemetry_instrumentation_fastapi-0.45b0-py3-none-any.whl.metadata (2.0 kB)
+Collecting opentelemetry-instrumentation-httpx==0.45b0 (from -r requirements.txt (line 16))
+  Downloading opentelemetry_instrumentation_httpx-0.45b0-py3-none-any.whl.metadata (6.9 kB)
+Collecting starlette<0.38.0,>=0.37.2 (from fastapi==0.111.0->-r requirements.txt (line 1)) 
+  Downloading starlette-0.37.2-py3-none-any.whl.metadata (5.9 kB)
+Collecting typing-extensions>=4.8.0 (from fastapi==0.111.0->-r requirements.txt (line 1))  
+  Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+Collecting fastapi-cli>=0.0.2 (from fastapi==0.111.0->-r requirements.txt (line 1))        
+  Downloading fastapi_cli-0.0.24-py3-none-any.whl.metadata (6.4 kB)
+Collecting jinja2>=2.11.2 (from fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+Collecting python-multipart>=0.0.7 (from fastapi==0.111.0->-r requirements.txt (line 1))   
+  Downloading python_multipart-0.0.27-py3-none-any.whl.metadata (2.1 kB)
+Collecting ujson!=4.0.2,!=4.1.0,!=4.2.0,!=4.3.0,!=5.0.0,!=5.1.0,>=4.0.1 (from fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading ujson-5.12.0-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (9.6 kB)
+Collecting orjson>=3.2.1 (from fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading orjson-3.11.8-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (41 kB)
+     ??????????????????????????????????????? 42.0/42.0 kB 149.1 MB/s eta 0:00:00
+Collecting email_validator>=2.0.0 (from fastapi==0.111.0->-r requirements.txt (line 1))    
+  Downloading email_validator-2.3.0-py3-none-any.whl.metadata (26 kB)
+Collecting click>=7.0 (from uvicorn==0.30.1->-r requirements.txt (line 2))
+  Downloading click-8.3.3-py3-none-any.whl.metadata (2.6 kB)
+Collecting h11>=0.8 (from uvicorn==0.30.1->-r requirements.txt (line 2))
+  Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+Collecting annotated-types>=0.4.0 (from pydantic==2.7.1->-r requirements.txt (line 3))     
+  Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+Collecting pydantic-core==2.18.2 (from pydantic==2.7.1->-r requirements.txt (line 3))      
+  Downloading pydantic_core-2.18.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.5 kB)
+Collecting anyio (from httpx==0.27.0->-r requirements.txt (line 4))
+  Downloading anyio-4.13.0-py3-none-any.whl.metadata (4.5 kB)
+Collecting certifi (from httpx==0.27.0->-r requirements.txt (line 4))
+  Downloading certifi-2026.4.22-py3-none-any.whl.metadata (2.5 kB)
+Collecting httpcore==1.* (from httpx==0.27.0->-r requirements.txt (line 4))
+  Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+Collecting idna (from httpx==0.27.0->-r requirements.txt (line 4))
+  Downloading idna-3.13-py3-none-any.whl.metadata (8.0 kB)
+Collecting sniffio (from httpx==0.27.0->-r requirements.txt (line 4))
+  Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+Collecting iniconfig (from pytest==8.2.2->-r requirements.txt (line 5))
+  Downloading iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting packaging (from pytest==8.2.2->-r requirements.txt (line 5))
+  Downloading packaging-26.2-py3-none-any.whl.metadata (3.5 kB)
+Collecting pluggy<2.0,>=1.5 (from pytest==8.2.2->-r requirements.txt (line 5))
+  Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting deprecated>=1.2.6 (from opentelemetry-api==1.24.0->-r requirements.txt (line 12))
+  Downloading deprecated-1.3.1-py2.py3-none-any.whl.metadata (5.9 kB)
+Collecting importlib-metadata<=7.0,>=6.0 (from opentelemetry-api==1.24.0->-r requirements.txt (line 12))
+  Downloading importlib_metadata-7.0.0-py3-none-any.whl.metadata (4.9 kB)
+Collecting opentelemetry-semantic-conventions==0.45b0 (from opentelemetry-sdk==1.24.0->-r requirements.txt (line 13))
+  Downloading opentelemetry_semantic_conventions-0.45b0-py3-none-any.whl.metadata (2.2 kB) 
+Collecting googleapis-common-protos~=1.52 (from opentelemetry-exporter-otlp-proto-grpc==1.24.0->-r requirements.txt (line 14))
+  Downloading googleapis_common_protos-1.74.0-py3-none-any.whl.metadata (9.2 kB)
+Collecting grpcio<2.0.0,>=1.0.0 (from opentelemetry-exporter-otlp-proto-grpc==1.24.0->-r requirements.txt (line 14))
+  Downloading grpcio-1.80.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (3.8 kB)
+Collecting opentelemetry-exporter-otlp-proto-common==1.24.0 (from opentelemetry-exporter-otlp-proto-grpc==1.24.0->-r requirements.txt (line 14))
+  Downloading opentelemetry_exporter_otlp_proto_common-1.24.0-py3-none-any.whl.metadata (1.7 kB)
+Collecting opentelemetry-proto==1.24.0 (from opentelemetry-exporter-otlp-proto-grpc==1.24.0->-r requirements.txt (line 14))
+  Downloading opentelemetry_proto-1.24.0-py3-none-any.whl.metadata (2.2 kB)
+Collecting opentelemetry-instrumentation-asgi==0.45b0 (from opentelemetry-instrumentation-fastapi==0.45b0->-r requirements.txt (line 15))
+  Downloading opentelemetry_instrumentation_asgi-0.45b0-py3-none-any.whl.metadata (1.9 kB) 
+Collecting opentelemetry-instrumentation==0.45b0 (from opentelemetry-instrumentation-fastapi==0.45b0->-r requirements.txt (line 15))
+  Downloading opentelemetry_instrumentation-0.45b0-py3-none-any.whl.metadata (6.1 kB)      
+Collecting opentelemetry-util-http==0.45b0 (from opentelemetry-instrumentation-fastapi==0.45b0->-r requirements.txt (line 15))
+  Downloading opentelemetry_util_http-0.45b0-py3-none-any.whl.metadata (2.4 kB)
+Requirement already satisfied: setuptools>=16.0 in /usr/local/lib/python3.11/site-packages (from opentelemetry-instrumentation==0.45b0->opentelemetry-instrumentation-fastapi==0.45b0->-r requirements.txt (line 15)) (79.0.1)
+Collecting wrapt<2.0.0,>=1.0.0 (from opentelemetry-instrumentation==0.45b0->opentelemetry-instrumentation-fastapi==0.45b0->-r requirements.txt (line 15))
+  Downloading wrapt-1.17.3-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.4 kB)
+Collecting asgiref~=3.0 (from opentelemetry-instrumentation-asgi==0.45b0->opentelemetry-instrumentation-fastapi==0.45b0->-r requirements.txt (line 15))
+  Downloading asgiref-3.11.1-py3-none-any.whl.metadata (9.3 kB)
+Collecting protobuf<5.0,>=3.19 (from opentelemetry-proto==1.24.0->opentelemetry-exporter-otlp-proto-grpc==1.24.0->-r requirements.txt (line 14))
+  Downloading protobuf-4.25.9-cp37-abi3-manylinux2014_x86_64.whl.metadata (541 bytes)      
+Collecting dnspython>=2.0.0 (from email_validator>=2.0.0->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading dnspython-2.8.0-py3-none-any.whl.metadata (5.7 kB)
+Collecting typer>=0.16.0 (from fastapi-cli>=0.0.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading typer-0.25.0-py3-none-any.whl.metadata (15 kB)
+Collecting rich-toolkit>=0.14.8 (from fastapi-cli>=0.0.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading rich_toolkit-0.19.7-py3-none-any.whl.metadata (1.0 kB)
+Collecting zipp>=0.5 (from importlib-metadata<=7.0,>=6.0->opentelemetry-api==1.24.0->-r requirements.txt (line 12))
+  Downloading zipp-3.23.1-py3-none-any.whl.metadata (3.6 kB)
+Collecting MarkupSafe>=2.0 (from jinja2>=2.11.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+Collecting httptools>=0.5.0 (from uvicorn[standard]>=0.12.0->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading httptools-0.7.1-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+Collecting python-dotenv>=0.13 (from uvicorn[standard]>=0.12.0->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading python_dotenv-1.2.2-py3-none-any.whl.metadata (27 kB)
+Collecting pyyaml>=5.1 (from uvicorn[standard]>=0.12.0->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+Collecting uvloop!=0.15.0,!=0.15.1,>=0.14.0 (from uvicorn[standard]>=0.12.0->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading uvloop-0.22.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (4.9 kB)
+Collecting watchfiles>=0.13 (from uvicorn[standard]>=0.12.0->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading watchfiles-1.1.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+Collecting websockets>=10.4 (from uvicorn[standard]>=0.12.0->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading websockets-16.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.8 kB)
+Collecting rich>=13.7.1 (from rich-toolkit>=0.14.8->fastapi-cli>=0.0.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading rich-15.0.0-py3-none-any.whl.metadata (18 kB)
+Collecting shellingham>=1.3.0 (from typer>=0.16.0->fastapi-cli>=0.0.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading shellingham-1.5.4-py2.py3-none-any.whl.metadata (3.5 kB)
+Collecting annotated-doc>=0.0.2 (from typer>=0.16.0->fastapi-cli>=0.0.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading annotated_doc-0.0.4-py3-none-any.whl.metadata (6.6 kB)
+Collecting markdown-it-py>=2.2.0 (from rich>=13.7.1->rich-toolkit>=0.14.8->fastapi-cli>=0.0.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading markdown_it_py-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+Collecting pygments<3.0.0,>=2.13.0 (from rich>=13.7.1->rich-toolkit>=0.14.8->fastapi-cli>=0.0.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=13.7.1->rich-toolkit>=0.14.8->fastapi-cli>=0.0.2->fastapi==0.111.0->-r requirements.txt (line 1))
+  Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+Downloading fastapi-0.111.0-py3-none-any.whl (91 kB)
+   ???????????????????????????????????????? 92.0/92.0 kB 195.8 MB/s eta 0:00:00
+Downloading uvicorn-0.30.1-py3-none-any.whl (62 kB)
+   ???????????????????????????????????????? 62.4/62.4 kB 147.6 MB/s eta 0:00:00
+Downloading pydantic-2.7.1-py3-none-any.whl (409 kB)
+   ???????????????????????????????????????? 409.3/409.3 kB 55.7 MB/s eta 0:00:00
+Downloading httpx-0.27.0-py3-none-any.whl (75 kB)
+   ???????????????????????????????????????? 75.6/75.6 kB 204.7 MB/s eta 0:00:00
+Downloading pytest-8.2.2-py3-none-any.whl (339 kB)
+   ??????????????????????????????????????? 339.9/339.9 kB 252.1 MB/s eta 0:00:00
+Downloading pytest_asyncio-0.23.7-py3-none-any.whl (17 kB)
+Downloading prometheus_client-0.20.0-py3-none-any.whl (54 kB)
+   ???????????????????????????????????????? 54.5/54.5 kB 106.1 MB/s eta 0:00:00
+Downloading opentelemetry_api-1.24.0-py3-none-any.whl (60 kB)
+   ???????????????????????????????????????? 60.1/60.1 kB 184.4 MB/s eta 0:00:00
+Downloading opentelemetry_sdk-1.24.0-py3-none-any.whl (106 kB)
+   ??????????????????????????????????????? 106.1/106.1 kB 209.8 MB/s eta 0:00:00
+Downloading opentelemetry_exporter_otlp_proto_grpc-1.24.0-py3-none-any.whl (18 kB)
+Downloading opentelemetry_instrumentation_fastapi-0.45b0-py3-none-any.whl (11 kB)
+Downloading opentelemetry_instrumentation_httpx-0.45b0-py3-none-any.whl (12 kB)
+Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+   ???????????????????????????????????????? 78.8/78.8 kB 197.7 MB/s eta 0:00:00
+Downloading opentelemetry_exporter_otlp_proto_common-1.24.0-py3-none-any.whl (17 kB)       
+Downloading opentelemetry_instrumentation-0.45b0-py3-none-any.whl (28 kB)
+Downloading opentelemetry_instrumentation_asgi-0.45b0-py3-none-any.whl (14 kB)
+Downloading opentelemetry_proto-1.24.0-py3-none-any.whl (50 kB)
+   ???????????????????????????????????????? 50.8/50.8 kB 144.6 MB/s eta 0:00:00
+Downloading opentelemetry_semantic_conventions-0.45b0-py3-none-any.whl (36 kB)
+Downloading opentelemetry_util_http-0.45b0-py3-none-any.whl (6.9 kB)
+Downloading pydantic_core-2.18.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+   ???????????????????????????????????????? 2.1/2.1 MB 134.3 MB/s eta 0:00:00
+Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+Downloading click-8.3.3-py3-none-any.whl (110 kB)
+   ??????????????????????????????????????? 110.5/110.5 kB 214.0 MB/s eta 0:00:00
+Downloading deprecated-1.3.1-py2.py3-none-any.whl (11 kB)
+Downloading email_validator-2.3.0-py3-none-any.whl (35 kB)
+Downloading fastapi_cli-0.0.24-py3-none-any.whl (12 kB)
+Downloading googleapis_common_protos-1.74.0-py3-none-any.whl (300 kB)
+   ??????????????????????????????????????? 300.7/300.7 kB 216.9 MB/s eta 0:00:00
+Downloading grpcio-1.80.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (6.8 MB)
+   ???????????????????????????????????????? 6.8/6.8 MB 194.6 MB/s eta 0:00:00
+Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+Downloading idna-3.13-py3-none-any.whl (68 kB)
+   ???????????????????????????????????????? 68.6/68.6 kB 185.2 MB/s eta 0:00:00
+Downloading importlib_metadata-7.0.0-py3-none-any.whl (23 kB)
+Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+   ??????????????????????????????????????? 134.9/134.9 kB 231.5 MB/s eta 0:00:00
+Downloading orjson-3.11.8-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (133 kB)
+   ??????????????????????????????????????? 133.6/133.6 kB 223.1 MB/s eta 0:00:00
+Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+Downloading python_multipart-0.0.27-py3-none-any.whl (29 kB)
+Downloading starlette-0.37.2-py3-none-any.whl (71 kB)
+   ???????????????????????????????????????? 71.9/71.9 kB 50.9 MB/s eta 0:00:00
+Downloading anyio-4.13.0-py3-none-any.whl (114 kB)
+   ??????????????????????????????????????? 114.4/114.4 kB 209.8 MB/s eta 0:00:00
+Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+   ???????????????????????????????????????? 44.6/44.6 kB 176.2 MB/s eta 0:00:00
+Downloading ujson-5.12.0-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (57 kB)
+   ???????????????????????????????????????? 57.4/57.4 kB 171.7 MB/s eta 0:00:00
+Downloading certifi-2026.4.22-py3-none-any.whl (135 kB)
+   ??????????????????????????????????????? 135.7/135.7 kB 235.3 MB/s eta 0:00:00
+Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Downloading packaging-26.2-py3-none-any.whl (100 kB)
+   ??????????????????????????????????????? 100.2/100.2 kB 204.3 MB/s eta 0:00:00
+Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+Downloading asgiref-3.11.1-py3-none-any.whl (24 kB)
+Downloading dnspython-2.8.0-py3-none-any.whl (331 kB)
+   ??????????????????????????????????????? 331.1/331.1 kB 223.6 MB/s eta 0:00:00
+Downloading httptools-0.7.1-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (456 kB)
+   ??????????????????????????????????????? 456.6/456.6 kB 251.4 MB/s eta 0:00:00
+Downloading markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+Downloading protobuf-4.25.9-cp37-abi3-manylinux2014_x86_64.whl (295 kB)
+   ??????????????????????????????????????? 295.2/295.2 kB 257.3 MB/s eta 0:00:00
+Downloading python_dotenv-1.2.2-py3-none-any.whl (22 kB)
+Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (806 kB)
+   ??????????????????????????????????????? 806.6/806.6 kB 188.6 MB/s eta 0:00:00
+Downloading rich_toolkit-0.19.7-py3-none-any.whl (32 kB)
+Downloading typer-0.25.0-py3-none-any.whl (55 kB)
+   ???????????????????????????????????????? 56.0/56.0 kB 172.1 MB/s eta 0:00:00
+Downloading uvloop-0.22.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (3.8 MB)
+   ???????????????????????????????????????? 3.8/3.8 MB 193.0 MB/s eta 0:00:00
+Downloading watchfiles-1.1.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (456 kB)
+   ??????????????????????????????????????? 456.1/456.1 kB 233.8 MB/s eta 0:00:00
+Downloading websockets-16.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (184 kB)
+   ??????????????????????????????????????? 184.6/184.6 kB 242.5 MB/s eta 0:00:00
+Downloading wrapt-1.17.3-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (82 kB)
+   ???????????????????????????????????????? 82.4/82.4 kB 214.5 MB/s eta 0:00:00
+Downloading zipp-3.23.1-py3-none-any.whl (10 kB)
+Downloading annotated_doc-0.0.4-py3-none-any.whl (5.3 kB)
+Downloading rich-15.0.0-py3-none-any.whl (310 kB)
+   ??????????????????????????????????????? 310.7/310.7 kB 242.1 MB/s eta 0:00:00
+Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+Downloading markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
+   ???????????????????????????????????????? 87.3/87.3 kB 130.8 MB/s eta 0:00:00
+Downloading pygments-2.20.0-py3-none-any.whl (1.2 MB)
+   ???????????????????????????????????????? 1.2/1.2 MB 93.8 MB/s eta 0:00:00
+Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+Installing collected packages: zipp, wrapt, websockets, uvloop, ujson, typing-extensions, sniffio, shellingham, pyyaml, python-multipart, python-dotenv, pygments, protobuf, prometheus-client, pluggy, packaging, orjson, opentelemetry-util-http, opentelemetry-semantic-conventions, mdurl, MarkupSafe, iniconfig, idna, httptools, h11, dnspython, click, certifi, asgiref, annotated-types, annotated-doc, uvicorn, pytest, pydantic-core, opentelemetry-proto, markdown-it-py, jinja2, importlib-metadata, httpcore, grpcio, googleapis-common-protos, email_validator, deprecated, anyio, watchfiles, starlette, rich, pytest-asyncio, pydantic, opentelemetry-exporter-otlp-proto-common, opentelemetry-api, httpx, typer, rich-toolkit, opentelemetry-sdk, opentelemetry-instrumentation, opentelemetry-instrumentation-httpx, opentelemetry-instrumentation-asgi, opentelemetry-exporter-otlp-proto-grpc, fastapi-cli, opentelemetry-instrumentation-fastapi, fastapi
+  WARNING: The script websockets is installed in '/root/.local/bin' which is not on PATH.  
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script dotenv is installed in '/root/.local/bin' which is not on PATH.      
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script pygmentize is installed in '/root/.local/bin' which is not on PATH.  
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script uvicorn is installed in '/root/.local/bin' which is not on PATH.     
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The scripts py.test and pytest are installed in '/root/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script markdown-it is installed in '/root/.local/bin' which is not on PATH. 
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script email_validator is installed in '/root/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script watchfiles is installed in '/root/.local/bin' which is not on PATH.  
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script httpx is installed in '/root/.local/bin' which is not on PATH.       
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The script typer is installed in '/root/.local/bin' which is not on PATH.       
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The scripts opentelemetry-bootstrap and opentelemetry-instrument are installed in '/root/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+Successfully installed MarkupSafe-3.0.3 annotated-doc-0.0.4 annotated-types-0.7.0 anyio-4.13.0 asgiref-3.11.1 certifi-2026.4.22 click-8.3.3 deprecated-1.3.1 dnspython-2.8.0 email_validator-2.3.0 fastapi-0.111.0 fastapi-cli-0.0.24 googleapis-common-protos-1.74.0 grpcio-1.80.0 h11-0.16.0 httpcore-1.0.9 httptools-0.7.1 httpx-0.27.0 idna-3.13 importlib-metadata-7.0.0 iniconfig-2.3.0 jinja2-3.1.6 markdown-it-py-4.0.0 mdurl-0.1.2 opentelemetry-api-1.24.0 opentelemetry-exporter-otlp-proto-common-1.24.0 opentelemetry-exporter-otlp-proto-grpc-1.24.0 opentelemetry-instrumentation-0.45b0 opentelemetry-instrumentation-asgi-0.45b0 opentelemetry-instrumentation-fastapi-0.45b0 opentelemetry-instrumentation-httpx-0.45b0 opentelemetry-proto-1.24.0 opentelemetry-sdk-1.24.0 opentelemetry-semantic-conventions-0.45b0 opentelemetry-util-http-0.45b0 orjson-3.11.8 packaging-26.2 pluggy-1.6.0 prometheus-client-0.20.0 protobuf-4.25.9 pydantic-2.7.1 pydantic-core-2.18.2 pygments-2.20.0 pytest-8.2.2 pytest-asyncio-0.23.7 python-dotenv-1.2.2 python-multipart-0.0.27 pyyaml-6.0.3 rich-15.0.0 rich-toolkit-0.19.7 shellingham-1.5.4 sniffio-1.3.1 starlette-0.37.2 typer-0.25.0 typing-extensions-4.15.0 ujson-5.12.0 uvicorn-0.30.1 uvloop-0.22.1 watchfiles-1.1.1 websockets-16.0 wrapt-1.17.3 zipp-3.23.1
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+
+[notice] A new release of pip is available: 24.0 -> 26.1
+[notice] To update, run: pip install --upgrade pip
+Removing intermediate container f89485e8e8e9
+ ---> 1c27eeca140b
+Step 5/15 : FROM python:3.11-slim
+ ---> 1eee6fcc4d86
+Step 6/15 : WORKDIR /app
+ ---> Running in a38d2ad03862
+Removing intermediate container a38d2ad03862
+ ---> e80c13f06e5a
+Step 7/15 : RUN adduser --disabled-password --no-create-home appuser
+ ---> Running in f0a44800cb10
+Changing the user information for appuser
+Enter the new value, or press ENTER for the default
+        Full Name []:   Room Number []:         Work Phone []:  Home Phone []:  Other []: Use of uninitialized value $answer in chop at /usr/sbin/adduser line 992.
+Use of uninitialized value $answer in pattern match (m//) at /usr/sbin/adduser line 993.   
+Use of uninitialized value $answer in pattern match (m//) at /usr/sbin/adduser line 994.   
+Is the information correct? [Y/n] Removing intermediate container f0a44800cb10
+ ---> 407394a57609
+Step 8/15 : COPY --from=builder /root/.local /home/appuser/.local
+ ---> 2bfe8ccf4033
+Step 9/15 : COPY . .
+ ---> e976a83e045f
+Step 10/15 : RUN chown -R appuser:appuser /app
+ ---> Running in b9ec9ead15e1
+Removing intermediate container b9ec9ead15e1
+ ---> e2e1a3bf8f3e
+Step 11/15 : USER appuser
+ ---> Running in c420a68ef376
+Removing intermediate container c420a68ef376
+ ---> 392d0b1ceeb6
+Step 12/15 : ENV PATH=/home/appuser/.local/bin:$PATH
+ ---> Running in c322ee1e1c45
+Removing intermediate container c322ee1e1c45
+ ---> ad8b9013ddee
+Step 13/15 : ENV PYTHONUNBUFFERED=1
+ ---> Running in 06da0a4db83f
+Removing intermediate container 06da0a4db83f
+ ---> 405183e6387c
+Step 14/15 : EXPOSE 8002
+ ---> Running in 3f46cb17ff00
+Removing intermediate container 3f46cb17ff00
+ ---> 924652ed0f4e
+Step 15/15 : CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8002", "--workers", "2"]
+ ---> Running in 38b54c360962
+Removing intermediate container 38b54c360962
+ ---> 3868424b2228
+Successfully built 3868424b2228
+Successfully tagged gcr.io/practice-test1-494717/payment-service:latest
+PUSH
+Pushing gcr.io/practice-test1-494717/payment-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/payment-service]
+257d22e7fc90: Preparing
+c8a6391bcecd: Preparing
+8d13d482fe71: Preparing
+7dcea16fea79: Preparing
+abfcdb501e4c: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/payment-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/payment-service]
+257d22e7fc90: Preparing
+c8a6391bcecd: Preparing
+8d13d482fe71: Preparing
+7dcea16fea79: Preparing
+abfcdb501e4c: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/payment-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/payment-service]
+257d22e7fc90: Preparing
+c8a6391bcecd: Preparing
+8d13d482fe71: Preparing
+7dcea16fea79: Preparing
+abfcdb501e4c: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/payment-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/payment-service]
+257d22e7fc90: Preparing
+c8a6391bcecd: Preparing
+8d13d482fe71: Preparing
+7dcea16fea79: Preparing
+abfcdb501e4c: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/payment-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/payment-service]
+257d22e7fc90: Preparing
+c8a6391bcecd: Preparing
+8d13d482fe71: Preparing
+7dcea16fea79: Preparing
+abfcdb501e4c: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/payment-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/payment-service]
+257d22e7fc90: Preparing
+c8a6391bcecd: Preparing
+8d13d482fe71: Preparing
+7dcea16fea79: Preparing
+abfcdb501e4c: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/payment-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/payment-service]
+257d22e7fc90: Preparing
+c8a6391bcecd: Preparing
+8d13d482fe71: Preparing
+7dcea16fea79: Preparing
+abfcdb501e4c: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/payment-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/payment-service]
+257d22e7fc90: Preparing
+c8a6391bcecd: Preparing
+8d13d482fe71: Preparing
+7dcea16fea79: Preparing
+abfcdb501e4c: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/payment-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/payment-service]
+257d22e7fc90: Preparing
+c8a6391bcecd: Preparing
+8d13d482fe71: Preparing
+7dcea16fea79: Preparing
+abfcdb501e4c: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+Pushing gcr.io/practice-test1-494717/payment-service:latest
+The push refers to repository [gcr.io/practice-test1-494717/payment-service]
+257d22e7fc90: Preparing
+c8a6391bcecd: Preparing
+8d13d482fe71: Preparing
+7dcea16fea79: Preparing
+abfcdb501e4c: Preparing
+2360b28b4660: Preparing
+248c30140986: Preparing
+fa1aec823035: Preparing
+6d7c150df58d: Preparing
+denied: gcr.io repo does not exist. Creating on push requires the artifactregistry.repositories.createOnPush permission
+ERROR: failed to push because we ran out of retries.
+ERROR
+ERROR: error pushing image "gcr.io/practice-test1-494717/payment-service:latest": retry budget exhausted (10 attempts): step exited with non-zero status: 1
+-------------------------------------------------------------------------------------------
+⚠️  Image api-gateway not confirmed — check Cloud Build logs
+⚠️  Image frontend-service not confirmed — check Cloud Build logs
+⚠️  Image cart-service not confirmed — check Cloud Build logs
+⚠️  Image catalog-service not confirmed — check Cloud Build logs
+⚠️  Image payment-service not confirmed — check Cloud Build logs
 
 ══════════════════════════════════════════════
-  ⚓ PHASE 4/8 — HELM: PLATFORM CONTROLLERS
+  📤 PHASE 7/8 — GIT COMMIT & PUSH
 ══════════════════════════════════════════════
 
-[12:28:48] Installing cert-manager...
-"jetstack" has been added to your repositories
-Hang tight while we grab the latest from your chart repositories...
-...Successfully got an update from the "jetstack" chart repository
-...Successfully got an update from the "ingress-nginx" chart repository
-...Successfully got an update from the "external-secrets" chart repository
-...Successfully got an update from the "prometheus-community" chart repository
-...Successfully got an update from the "istio" chart repository
-Update Complete. ⎈Happy Helming!⎈
-Release "cert-manager" does not exist. Installing it now.
-level=WARN msg="unable to find exact version; falling back to closest available version" chart=cert-manager requested="" selected=v1.20.2
-NAME: cert-manager
-LAST DEPLOYED: Mon Apr 20 12:28:56 2026
-NAMESPACE: cert-manager
-STATUS: deployed
-REVISION: 1
-DESCRIPTION: Install complete
-TEST SUITE: None
-NOTES:
-⚠️  WARNING: `installCRDs` is deprecated, use `crds.enabled` instead.
-cert-manager v1.20.2 has been deployed successfully!
-
-In order to begin issuing certificates, you will need to set up a ClusterIssuer
-or Issuer resource (for example, by creating a 'letsencrypt-staging' issuer).
-
-More information on the different types of issuers and how to configure them
-can be found in our documentation:
-
-https://cert-manager.io/docs/configuration/
-
-For information on how to configure cert-manager to automatically provision
-Certificates for Ingress resources, take a look at the `ingress-shim`
-documentation:
-
-https://cert-manager.io/docs/usage/ingress/
-
-For information on how to configure cert-manager to automatically provision
-Certificates for Gateway API resources, take a look at the `gateway resource`
-documentation:
-
-https://cert-manager.io/docs/usage/gateway/
-✅ cert-manager installed.
-[12:29:33] Installing external-secrets...
-"external-secrets" has been added to your repositories
-Hang tight while we grab the latest from your chart repositories...
-...Successfully got an update from the "ingress-nginx" chart repository
-...Successfully got an update from the "jetstack" chart repository
-...Successfully got an update from the "external-secrets" chart repository
-...Successfully got an update from the "istio" chart repository
-...Successfully got an update from the "prometheus-community" chart repository
-Update Complete. ⎈Happy Helming!⎈
-Release "external-secrets" does not exist. Installing it now.
-level=WARN msg="unable to find exact version; falling back to closest available version" chart=external-secrets requested="" selected=2.3.0
-NAME: external-secrets
-LAST DEPLOYED: Mon Apr 20 12:29:38 2026
-NAMESPACE: external-secrets
-STATUS: deployed
-REVISION: 1
-DESCRIPTION: Install complete
-TEST SUITE: None
-NOTES:
-external-secrets has been deployed successfully in namespace external-secrets!
-
-In order to begin using ExternalSecrets, you will need to set up a SecretStore
-or ClusterSecretStore resource (for example, by creating a 'vault' SecretStore).
-
-More information on the different types of SecretStores and how to configure them
-can be found in our Github: https://github.com/external-secrets/external-secrets
-✅ external-secrets installed.
-[12:30:55] Waiting 30 seconds for cert-manager and external-secrets webhooks to fully populate their CA certificates...
-[12:31:25] Installing ingress-nginx...
-"ingress-nginx" has been added to your repositories
-Hang tight while we grab the latest from your chart repositories...
-...Successfully got an update from the "ingress-nginx" chart repository
-...Successfully got an update from the "jetstack" chart repository
-...Successfully got an update from the "external-secrets" chart repository
-...Successfully got an update from the "istio" chart repository
-...Successfully got an update from the "prometheus-community" chart repository
-Update Complete. ⎈Happy Helming!⎈
-Release "ingress-nginx" does not exist. Installing it now.
-level=WARN msg="unable to find exact version; falling back to closest available version" chart=ingress-nginx requested="" selected=4.15.1
-NAME: ingress-nginx
-LAST DEPLOYED: Mon Apr 20 12:31:30 2026
-NAMESPACE: ingress-nginx
-STATUS: deployed
-REVISION: 1
-DESCRIPTION: Install complete
-TEST SUITE: None
-NOTES:
-The ingress-nginx controller has been installed.
-It may take a few minutes for the load balancer IP to be available.
-You can watch the status by running 'kubectl get service --namespace ingress-nginx ingress-nginx-controller --output wide --watch'
-
-An example Ingress that makes use of the controller:
-  apiVersion: networking.k8s.io/v1
-  kind: Ingress
-  metadata:
-    name: example
-    namespace: foo
-  spec:
-    ingressClassName: nginx
-    rules:
-      - host: www.example.com
-        http:
-          paths:
-            - pathType: Prefix
-              backend:
-                service:
-                  name: exampleService
-                  port:
-                    number: 80
-              path: /
-    # This section is only required if TLS is to be enabled for the Ingress
-    tls:
-      - hosts:
-        - www.example.com
-        secretName: example-tls
-
-If TLS is enabled for the Ingress, a Secret containing the certificate and key must also be provided:
-
-  apiVersion: v1
-  kind: Secret
-  metadata:
-    name: example-tls
-    namespace: foo
-  data:
-    tls.crt: <base64 encoded cert>
-    tls.key: <base64 encoded key>
-  type: kubernetes.io/tls
-✅ ingress-nginx installed.
-[12:33:00] Installing Prometheus & Grafana...
-"prometheus-community" has been added to your repositories
-Hang tight while we grab the latest from your chart repositories...
-...Successfully got an update from the "ingress-nginx" chart repository
-...Successfully got an update from the "jetstack" chart repository
-...Successfully got an update from the "external-secrets" chart repository
-...Successfully got an update from the "istio" chart repository
-...Successfully got an update from the "prometheus-community" chart repository
-Update Complete. ⎈Happy Helming!⎈
-Release "kube-prometheus-stack" does not exist. Installing it now.
-level=WARN msg="unable to find exact version; falling back to closest available version" chart=kube-prometheus-stack requested="" selected=83.6.0
-Error: resource not ready, name: kube-prometheus-stack-grafana, kind: PersistentVolumeClaim, status: InProgress
-resource not ready, name: kube-prometheus-stack-grafana, kind: Deployment, status: Failed
-context deadline exceeded
+warning: in the working copy of 'scripts/setup-gcp.sh', LF will be replaced by CRLF the next time Git touches it
+[main 7f43e89] deploy: full rebuild at 2026-04-29 00:22 — all services provisioned
+ 2 files changed, 8 insertions(+)
+[00:22:43] Committed: deploy: full rebuild at 2026-04-29 00:22 — all services provisioned

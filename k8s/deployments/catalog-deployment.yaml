@@ -36,7 +36,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: catalog
-          image: gcr.io/practice-test1-494717/catalog-service:latest  # replaced by CI
+          image: us-central1-docker.pkg.dev/practice-test1-494717/ecommerce-docker/catalog-service:latest  # replaced by CI
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

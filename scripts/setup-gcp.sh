@@ -21,10 +21,19 @@ gcloud services enable \
   cloudbuild.googleapis.com \
   monitoring.googleapis.com \
   logging.googleapis.com \
-  containerregistry.googleapis.com \
+  artifactregistry.googleapis.com \
   compute.googleapis.com \
   servicenetworking.googleapis.com \
   cloudresourcemanager.googleapis.com
+
+echo ""
+echo "📦 Creating Artifact Registry Docker repository..."
+gcloud artifacts repositories create ecommerce-docker \
+  --repository-format=docker \
+  --location=us-central1 \
+  --description="Docker images for ecommerce services" \
+  --project="$PROJECT_ID" \
+  --quiet 2>/dev/null || echo "Repository already exists, continuing."
 
 echo ""
 echo "👤 Creating GitHub Actions service account..."
@@ -58,7 +67,7 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 
 gcloud projects add-iam-policy-binding $PROJECT_ID \
   --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" \
-  --role="roles/artifactregistry.admin" --quiet
+  --role="roles/artifactregistry.writer" --quiet
 
 # Grant Compute Engine SA permissions (required for Cloud Build source staging)
 gcloud projects add-iam-policy-binding $PROJECT_ID \
@@ -67,7 +76,7 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
 
 gcloud projects add-iam-policy-binding $PROJECT_ID \
   --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
-  --role="roles/artifactregistry.admin" --quiet
+  --role="roles/artifactregistry.reader" --quiet
 
 echo ""
 echo "📄 Generating service account key..."
