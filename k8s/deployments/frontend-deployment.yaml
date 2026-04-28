@@ -17,10 +17,22 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: gcr.io/practic-test-only/frontend-service:latest
+        image: gcr.io/practice-test1-494717/frontend-service:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
         resources:
           requests:
             cpu: "50m"
@@ -34,10 +46,6 @@ spec:
           capabilities:
             drop: ["ALL"]
           readOnlyRootFilesystem: false
-          # NGINX needs root by default unless reconfigured, but Autopilot allows nonRoot wrappers.
-          # For a quick NGINX container without custom configs, we might leave runAsNonRoot out, 
-          # or use an NGINX unprivileged image. The `nginx:alpine` uses root for port 80.
-          # We'll use standard GKE Autopilot compatibility.
       securityContext:
         seccompProfile:
           type: RuntimeDefault

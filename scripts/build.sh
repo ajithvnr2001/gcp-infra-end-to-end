@@ -31,7 +31,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 # ─── CONFIGURATION ────────────────────────────────────────────────────────────
-PROJECT_ID="practic-test-only"
+PROJECT_ID="practice-test1-494717"
 REGION="us-central1"
 ZONE="us-central1-a"
 CLUSTER_NAME="ecommerce-cluster"
@@ -180,7 +180,7 @@ helm repo update
 helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
   --namespace monitoring --create-namespace \
   --values monitoring/prometheus/values.yaml \
-  --wait --timeout 15m
+  --wait --timeout 20m
 success "Prometheus & Grafana installed."
 INGRESS_IP=$(kubectl get svc ingress-nginx-controller -n ingress-nginx \
   -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null || echo "pending")

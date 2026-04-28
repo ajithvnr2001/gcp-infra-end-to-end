@@ -3,66 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aura | Premium E-Commerce</title>
-    <meta name="description" content="Discover premium, curated goods.">
+    <title>Northstar Atelier | Premium Commerce Control Room</title>
+    <meta
+        name="description"
+        content="Browse curated products, manage a live cart, and place orders through the full e-commerce platform."
+    >
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <nav class="glass-nav">
-        <div class="nav-content">
-            <h1 class="brand">AURA.</h1>
-            <button class="cart-btn" onclick="toggleCart()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                <span class="cart-count" id="cart-count">0</span>
-            </button>
-        </div>
-    </nav>
+    <div class="page-shell">
+        <div class="ambient ambient-one"></div>
+        <div class="ambient ambient-two"></div>
+        <div class="ambient ambient-three"></div>
 
-    <header class="hero">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="hero-content">
-            <h2 class="gradient-text">Elevate Your Lifestyle</h2>
-            <p>Curated tech, apparel, and accessories for the modern aesthetic.</p>
-        </div>
-    </header>
+        <header class="topbar">
+            <div class="brand-block">
+                <p class="eyebrow">Northstar Atelier</p>
+                <h1>Curated commerce with a full delivery path.</h1>
+            </div>
+            <div class="topbar-actions">
+                <div class="status-pill" id="gateway-pill">Checking gateway</div>
+                <button class="ghost-btn" id="hero-shop-btn" type="button">Browse catalog</button>
+                <button class="cart-btn" id="cart-toggle" type="button">
+                    Cart
+                    <span id="cart-count">0</span>
+                </button>
+            </div>
+        </header>
 
-    <main class="container">
-        <section class="products">
-            <div class="section-headers">
-                <h3>Trending Catalog</h3>
-                <div class="loader" id="loader"></div>
-            </div>
-            <div class="product-grid" id="product-grid">
-                <!-- Products dynamically rendered here -->
-            </div>
-            <div id="error-message" class="error-msg hidden">
-                Unable to load products. Retrying...
-            </div>
-        </section>
-    </main>
-
-    <!-- Cart Overlay -->
-    <div class="cart-overlay hidden" id="cart-overlay" onclick="toggleCart()">
-        <div class="cart-panel glass-panel" onclick="event.stopPropagation()">
-            <div class="cart-header">
-                <h3>Your Cart</h3>
-                <button class="close-btn" onclick="toggleCart()">✕</button>
-            </div>
-            <div class="cart-items" id="cart-items">
-                <p class="empty-cart">Your cart is feeling light.</p>
-            </div>
-            <div class="cart-footer">
-                <div class="total-row">
-                    <span>Total</span>
-                    <span id="cart-total">$0.00</span>
+        <main class="content">
+            <section class="hero fade-in-up">
+                <div class="hero-copy">
+                    <p class="eyebrow">Production storefront</p>
+                    <h2>From catalog discovery to confirmed order, wired end to end.</h2>
+                    <p class="hero-text">
+                        This frontend talks to the API gateway, updates cart state in real time,
+                        captures checkout details, and surfaces order history for the current shopper session.
+                    </p>
+                    <div class="hero-actions">
+                        <button class="primary-btn" id="scroll-catalog-btn" type="button">Start shopping</button>
+                        <button class="secondary-btn" id="open-cart-btn" type="button">Open checkout drawer</button>
+                    </div>
                 </div>
-                <button class="checkout-btn" onclick="checkout()">Secure Checkout</button>
+
+                <aside class="hero-panel">
+                    <div class="metric-card">
+                        <span>Live catalog</span>
+                        <strong id="hero-catalog-count">0 products</strong>
+                    </div>
+                    <div class="metric-card">
+                        <span>Cart load</span>
+                        <strong id="hero-cart-count">0 items</strong>
+                    </div>
+                    <div class="metric-card">
+                        <span>Order history</span>
+                        <strong id="hero-order-count">0 orders</strong>
+                    </div>
+                    <div class="metric-card">
+                        <span>Session identity</span>
+                        <strong id="user-id-display">guest</strong>
+                    </div>
+                </aside>
+            </section>
+
+            <section class="value-strip fade-in-up">
+                <article class="value-card">
+                    <p class="eyebrow">Catalog</p>
+                    <h3>Search and filter the curated collection.</h3>
+                    <p>Category chips and sort controls are wired to the live product feed from the catalog service.</p>
+                </article>
+                <article class="value-card">
+                    <p class="eyebrow">Cart</p>
+                    <h3>Update quantities without leaving the page.</h3>
+                    <p>The cart drawer uses quantity mutations and removal APIs instead of a demo-only overlay.</p>
+                </article>
+                <article class="value-card">
+                    <p class="eyebrow">Checkout</p>
+                    <h3>Place orders and review them immediately.</h3>
+                    <p>Orders are created through the gateway, the cart is cleared server-side, and history refreshes live.</p>
+                </article>
+            </section>
+
+            <section class="catalog-section fade-in-up" id="catalog">
+                <div class="section-header">
+                    <div>
+                        <p class="eyebrow">Live storefront</p>
+                        <h2>Build a basket from the current catalog.</h2>
+                    </div>
+                    <p class="results-copy" id="results-count">Loading products...</p>
+                </div>
+
+                <div class="controls-panel">
+                    <label class="field">
+                        <span>Search</span>
+                        <input id="search-input" type="search" placeholder="Search by product or description">
+                    </label>
+                    <label class="field compact">
+                        <span>Sort</span>
+                        <select id="sort-select">
+                            <option value="featured">Featured</option>
+                            <option value="rating">Highest rated</option>
+                            <option value="price-asc">Price: low to high</option>
+                            <option value="price-desc">Price: high to low</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="category-chips" id="category-chips"></div>
+
+                <div class="loader" id="loader">
+                    <div class="spinner"></div>
+                    <span>Syncing products from the catalog service...</span>
+                </div>
+
+                <div class="error-banner hidden" id="error-message">
+                    Live data is unavailable right now. The storefront is showing fallback catalog data so the flow still works.
+                </div>
+
+                <div class="product-grid" id="product-grid"></div>
+
+                <div class="empty-state hidden" id="empty-state">
+                    <h3>No products match the current filters.</h3>
+                    <p>Adjust the query, category, or sort order to widen the result set.</p>
+                </div>
+            </section>
+
+            <section class="orders-section fade-in-up">
+                <div class="orders-main">
+                    <div class="section-header">
+                        <div>
+                            <p class="eyebrow">Order ledger</p>
+                            <h2>Recent purchases for this shopper session.</h2>
+                        </div>
+                    </div>
+
+                    <article class="spotlight-card hidden" id="last-order-card"></article>
+                    <div class="orders-list" id="orders-list"></div>
+                </div>
+
+                <aside class="orders-aside">
+                    <article class="status-card">
+                        <p class="eyebrow">Platform signals</p>
+                        <div class="status-row">
+                            <span>Gateway status</span>
+                            <strong id="gateway-status">Checking</strong>
+                        </div>
+                        <div class="status-row">
+                            <span>Cart total</span>
+                            <strong id="summary-cart-total">INR 0</strong>
+                        </div>
+                        <div class="status-row">
+                            <span>Stored orders</span>
+                            <strong id="summary-order-count">0</strong>
+                        </div>
+                    </article>
+
+                    <article class="status-card">
+                        <p class="eyebrow">How checkout works</p>
+                        <ol class="mini-steps">
+                            <li>Choose products from the live or fallback catalog.</li>
+                            <li>Adjust quantities inside the cart drawer.</li>
+                            <li>Submit name, address, and payment method.</li>
+                            <li>Review the confirmed order and refreshed history below.</li>
+                        </ol>
+                    </article>
+                </aside>
+            </section>
+        </main>
+    </div>
+
+    <div class="cart-overlay hidden" id="cart-overlay">
+        <aside class="cart-drawer" id="cart-panel" aria-label="Shopping cart">
+            <div class="cart-header">
+                <div>
+                    <p class="eyebrow">Checkout drawer</p>
+                    <h2>Your cart</h2>
+                </div>
+                <button class="close-btn" id="close-cart-btn" type="button" aria-label="Close cart">Close</button>
             </div>
-        </div>
+
+            <div class="cart-scroll">
+                <div class="cart-items" id="cart-items"></div>
+
+                <form class="checkout-form" id="checkout-form">
+                    <div class="form-header">
+                        <h3>Delivery details</h3>
+                        <p>Orders are routed through the payment service and cleared from the cart on success.</p>
+                    </div>
+
+                    <label class="field">
+                        <span>Full name</span>
+                        <input id="customer-name" name="customerName" type="text" placeholder="Ajith Kumar" required>
+                    </label>
+
+                    <label class="field">
+                        <span>Email</span>
+                        <input id="customer-email" name="customerEmail" type="email" placeholder="you@example.com">
+                    </label>
+
+                    <label class="field">
+                        <span>Delivery address</span>
+                        <textarea id="customer-address" name="customerAddress" rows="4" placeholder="Flat 12, Residency Road, Bengaluru" required></textarea>
+                    </label>
+
+                    <label class="field compact">
+                        <span>Payment method</span>
+                        <select id="payment-method" name="paymentMethod">
+                            <option value="razorpay">Razorpay</option>
+                            <option value="upi">UPI</option>
+                            <option value="card">Card</option>
+                            <option value="cod">Cash on delivery</option>
+                        </select>
+                    </label>
+
+                    <button class="primary-btn full-width" id="checkout-btn" type="submit">Place secure order</button>
+                    <p class="checkout-feedback" id="checkout-feedback"></p>
+                </form>
+            </div>
+
+            <div class="cart-footer">
+                <div class="summary-line">
+                    <span>Items</span>
+                    <strong id="cart-quantity">0</strong>
+                </div>
+                <div class="summary-line total">
+                    <span>Total</span>
+                    <strong id="cart-total">INR 0</strong>
+                </div>
+            </div>
+        </aside>
     </div>
 
     <script src="app.js"></script>

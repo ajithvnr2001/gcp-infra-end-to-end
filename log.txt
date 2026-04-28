@@ -1,0 +1,152 @@
+Fetching cluster endpoint and auth data.
+kubeconfig entry generated for ecommerce-cluster.
+✅ kubectl context: gke_practic-test-only_us-central1-a_ecommerce-cluster
+
+══════════════════════════════════════════════
+  ⚓ PHASE 4/8 — HELM: PLATFORM CONTROLLERS
+══════════════════════════════════════════════
+
+[12:28:48] Installing cert-manager...
+"jetstack" has been added to your repositories
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "jetstack" chart repository
+...Successfully got an update from the "ingress-nginx" chart repository
+...Successfully got an update from the "external-secrets" chart repository
+...Successfully got an update from the "prometheus-community" chart repository
+...Successfully got an update from the "istio" chart repository
+Update Complete. ⎈Happy Helming!⎈
+Release "cert-manager" does not exist. Installing it now.
+level=WARN msg="unable to find exact version; falling back to closest available version" chart=cert-manager requested="" selected=v1.20.2
+NAME: cert-manager
+LAST DEPLOYED: Mon Apr 20 12:28:56 2026
+NAMESPACE: cert-manager
+STATUS: deployed
+REVISION: 1
+DESCRIPTION: Install complete
+TEST SUITE: None
+NOTES:
+⚠️  WARNING: `installCRDs` is deprecated, use `crds.enabled` instead.
+cert-manager v1.20.2 has been deployed successfully!
+
+In order to begin issuing certificates, you will need to set up a ClusterIssuer
+or Issuer resource (for example, by creating a 'letsencrypt-staging' issuer).
+
+More information on the different types of issuers and how to configure them
+can be found in our documentation:
+
+https://cert-manager.io/docs/configuration/
+
+For information on how to configure cert-manager to automatically provision
+Certificates for Ingress resources, take a look at the `ingress-shim`
+documentation:
+
+https://cert-manager.io/docs/usage/ingress/
+
+For information on how to configure cert-manager to automatically provision
+Certificates for Gateway API resources, take a look at the `gateway resource`
+documentation:
+
+https://cert-manager.io/docs/usage/gateway/
+✅ cert-manager installed.
+[12:29:33] Installing external-secrets...
+"external-secrets" has been added to your repositories
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "ingress-nginx" chart repository
+...Successfully got an update from the "jetstack" chart repository
+...Successfully got an update from the "external-secrets" chart repository
+...Successfully got an update from the "istio" chart repository
+...Successfully got an update from the "prometheus-community" chart repository
+Update Complete. ⎈Happy Helming!⎈
+Release "external-secrets" does not exist. Installing it now.
+level=WARN msg="unable to find exact version; falling back to closest available version" chart=external-secrets requested="" selected=2.3.0
+NAME: external-secrets
+LAST DEPLOYED: Mon Apr 20 12:29:38 2026
+NAMESPACE: external-secrets
+STATUS: deployed
+REVISION: 1
+DESCRIPTION: Install complete
+TEST SUITE: None
+NOTES:
+external-secrets has been deployed successfully in namespace external-secrets!
+
+In order to begin using ExternalSecrets, you will need to set up a SecretStore
+or ClusterSecretStore resource (for example, by creating a 'vault' SecretStore).
+
+More information on the different types of SecretStores and how to configure them
+can be found in our Github: https://github.com/external-secrets/external-secrets
+✅ external-secrets installed.
+[12:30:55] Waiting 30 seconds for cert-manager and external-secrets webhooks to fully populate their CA certificates...
+[12:31:25] Installing ingress-nginx...
+"ingress-nginx" has been added to your repositories
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "ingress-nginx" chart repository
+...Successfully got an update from the "jetstack" chart repository
+...Successfully got an update from the "external-secrets" chart repository
+...Successfully got an update from the "istio" chart repository
+...Successfully got an update from the "prometheus-community" chart repository
+Update Complete. ⎈Happy Helming!⎈
+Release "ingress-nginx" does not exist. Installing it now.
+level=WARN msg="unable to find exact version; falling back to closest available version" chart=ingress-nginx requested="" selected=4.15.1
+NAME: ingress-nginx
+LAST DEPLOYED: Mon Apr 20 12:31:30 2026
+NAMESPACE: ingress-nginx
+STATUS: deployed
+REVISION: 1
+DESCRIPTION: Install complete
+TEST SUITE: None
+NOTES:
+The ingress-nginx controller has been installed.
+It may take a few minutes for the load balancer IP to be available.
+You can watch the status by running 'kubectl get service --namespace ingress-nginx ingress-nginx-controller --output wide --watch'
+
+An example Ingress that makes use of the controller:
+  apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: example
+    namespace: foo
+  spec:
+    ingressClassName: nginx
+    rules:
+      - host: www.example.com
+        http:
+          paths:
+            - pathType: Prefix
+              backend:
+                service:
+                  name: exampleService
+                  port:
+                    number: 80
+              path: /
+    # This section is only required if TLS is to be enabled for the Ingress
+    tls:
+      - hosts:
+        - www.example.com
+        secretName: example-tls
+
+If TLS is enabled for the Ingress, a Secret containing the certificate and key must also be provided:
+
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: example-tls
+    namespace: foo
+  data:
+    tls.crt: <base64 encoded cert>
+    tls.key: <base64 encoded key>
+  type: kubernetes.io/tls
+✅ ingress-nginx installed.
+[12:33:00] Installing Prometheus & Grafana...
+"prometheus-community" has been added to your repositories
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "ingress-nginx" chart repository
+...Successfully got an update from the "jetstack" chart repository
+...Successfully got an update from the "external-secrets" chart repository
+...Successfully got an update from the "istio" chart repository
+...Successfully got an update from the "prometheus-community" chart repository
+Update Complete. ⎈Happy Helming!⎈
+Release "kube-prometheus-stack" does not exist. Installing it now.
+level=WARN msg="unable to find exact version; falling back to closest available version" chart=kube-prometheus-stack requested="" selected=83.6.0
+Error: resource not ready, name: kube-prometheus-stack-grafana, kind: PersistentVolumeClaim, status: InProgress
+resource not ready, name: kube-prometheus-stack-grafana, kind: Deployment, status: Failed
+context deadline exceeded

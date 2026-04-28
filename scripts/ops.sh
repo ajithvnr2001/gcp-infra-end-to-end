@@ -55,7 +55,7 @@ case $CMD in
 
   health)
     echo "=== Health Check: All Services ==="
-    for svc in catalog-service cart-service payment-service api-gateway; do
+    for svc in catalog-service cart-service payment-service api-gateway frontend-service; do
       POD=$(kubectl get pod -n $NAMESPACE -l app=$svc -o jsonpath="{.items[0].metadata.name}" 2>/dev/null)
       if [ -z "$POD" ]; then
         echo "❌ $svc: no pod found"

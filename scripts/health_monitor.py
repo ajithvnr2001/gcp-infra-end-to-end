@@ -18,7 +18,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 NAMESPACE = "ecommerce"
-SERVICES  = ["catalog-service", "cart-service", "payment-service", "api-gateway"]
+SERVICES  = ["catalog-service", "cart-service", "payment-service", "api-gateway", "frontend-service"]
 ALERT_THRESHOLD = 3   # alert after 3 consecutive failures
 
 failure_counts = {s: 0 for s in SERVICES}

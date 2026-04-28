@@ -34,11 +34,19 @@ echo "🛍️  Phase 2: Product detail views..."
 hey -z ${DURATION}s -c $((CONCURRENCY/2)) -q 5 \
   "${GATEWAY_URL}/products/p1" &
 
-echo "🛒 Phase 3: Cart adds (peak checkout pressure)..."
+echo "🛒 Phase 3: Cart adds..."
 for i in $(seq 1 10); do
   curl -s -X POST "${GATEWAY_URL}/cart/user${i}/add" \
     -H "Content-Type: application/json" \
-    -d "{\"product_id\":\"p1\",\"product_name\":\"Headphones\",\"price\":1999.0,\"quantity\":1}" \
+    -d "{\"product_id\":\"p1\",\"product_name\":\"Astra Wireless Headphones\",\"price\":1999.0,\"quantity\":1,\"category\":\"audio\"}" \
+    > /dev/null &
+done
+
+echo "💳 Phase 4: Checkout submissions..."
+for i in $(seq 1 10); do
+  curl -s -X POST "${GATEWAY_URL}/orders" \
+    -H "Content-Type: application/json" \
+    -d "{\"user_id\":\"user${i}\",\"items\":[{\"product_id\":\"p1\",\"product_name\":\"Astra Wireless Headphones\",\"price\":1999.0,\"quantity\":1}],\"address\":\"123 MG Road, Bangalore\",\"payment_method\":\"razorpay\",\"customer_name\":\"Load Test User ${i}\",\"customer_email\":\"loadtest${i}@example.com\"}" \
     > /dev/null &
 done
 

@@ -10,12 +10,21 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
 from opentelemetry import trace
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
-from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
-from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 import os, time, json, logging, sys
+
+OTEL_IMPORT_ERROR = None
+try:
+    from opentelemetry.sdk.trace import TracerProvider
+    from opentelemetry.sdk.trace.export import BatchSpanProcessor
+    from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+    from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+except ImportError as exc:
+    TracerProvider = None
+    BatchSpanProcessor = None
+    OTLPSpanExporter = None
+    FastAPIInstrumentor = None
+    OTEL_IMPORT_ERROR = exc
 
 # ── Structured JSON Logging (GCP Cloud Logging format) ────────────────────────
 class GCPJsonFormatter(logging.Formatter):
@@ -51,12 +60,20 @@ OTEL_ENDPOINT = os.getenv(
     "OTEL_EXPORTER_OTLP_ENDPOINT",
     "http://otel-collector.monitoring.svc.cluster.local:4317"
 )
-provider = TracerProvider()
-provider.add_span_processor(
-    BatchSpanProcessor(OTLPSpanExporter(endpoint=OTEL_ENDPOINT, insecure=True))
-)
-trace.set_tracer_provider(provider)
 tracer = trace.get_tracer("catalog-service")
+
+if TracerProvider and BatchSpanProcessor and OTLPSpanExporter:
+    try:
+        provider = TracerProvider()
+        provider.add_span_processor(
+            BatchSpanProcessor(OTLPSpanExporter(endpoint=OTEL_ENDPOINT, insecure=True))
+        )
+        trace.set_tracer_provider(provider)
+        tracer = trace.get_tracer("catalog-service")
+    except Exception as exc:
+        logger.warning("otel tracing disabled error=%s", exc)
+elif OTEL_IMPORT_ERROR:
+    logger.warning("otel instrumentation unavailable error=%s", OTEL_IMPORT_ERROR)
 
 # ── Prometheus Metrics ────────────────────────────────────────────────────────
 REQUEST_COUNT = Counter(
@@ -74,7 +91,11 @@ REQUEST_LATENCY = Histogram(
 # ── App ───────────────────────────────────────────────────────────────────────
 app = FastAPI(title="Catalog Service", version="1.0.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
-FastAPIInstrumentor.instrument_app(app)
+if FastAPIInstrumentor:
+    try:
+        FastAPIInstrumentor.instrument_app(app)
+    except Exception as exc:
+        logger.warning("fastapi instrumentation disabled error=%s", exc)
 START_TIME = time.time()
 
 @app.middleware("http")
@@ -91,14 +112,83 @@ async def metrics_middleware(request: Request, call_next):
 
 # ── Models & Data ─────────────────────────────────────────────────────────────
 class Product(BaseModel):
-    id: str; name: str; price: float; category: str; stock: int; rating: float
+    id: str
+    name: str
+    price: float
+    category: str
+    stock: int
+    rating: float
+    description: str
+    badge: str
+    eta: str
 
 PRODUCTS = [
-    Product(id="p1", name="Wireless Headphones", price=1999.0, category="electronics", stock=150, rating=4.5),
-    Product(id="p2", name="Running Shoes",        price=2499.0, category="footwear",    stock=80,  rating=4.3),
-    Product(id="p3", name="Cotton T-Shirt",        price=499.0,  category="clothing",    stock=500, rating=4.1),
-    Product(id="p4", name="Smartphone Case",       price=299.0,  category="accessories", stock=200, rating=4.6),
-    Product(id="p5", name="Yoga Mat",              price=799.0,  category="sports",      stock=60,  rating=4.4),
+    Product(
+        id="p1",
+        name="Astra Wireless Headphones",
+        price=1999.0,
+        category="audio",
+        stock=150,
+        rating=4.7,
+        description="Active noise cancellation, low-latency Bluetooth, and a 32-hour battery life.",
+        badge="Best seller",
+        eta="Next-day delivery",
+    ),
+    Product(
+        id="p2",
+        name="Transit Weekender Duffel",
+        price=2499.0,
+        category="travel",
+        stock=80,
+        rating=4.5,
+        description="Structured carry-all with laptop sleeve, shoe compartment, and water-resistant shell.",
+        badge="New drop",
+        eta="2-day dispatch",
+    ),
+    Product(
+        id="p3",
+        name="Foundry Mechanical Keyboard",
+        price=5499.0,
+        category="workspace",
+        stock=65,
+        rating=4.8,
+        description="Hot-swappable switches, gasket mount frame, and warm white backlighting.",
+        badge="Editor pick",
+        eta="Ships today",
+    ),
+    Product(
+        id="p4",
+        name="Canvas Everyday Overshirt",
+        price=1799.0,
+        category="apparel",
+        stock=210,
+        rating=4.3,
+        description="Layer-ready cotton twill with relaxed tailoring for work and weekends.",
+        badge="Seasonal staple",
+        eta="2-day dispatch",
+    ),
+    Product(
+        id="p5",
+        name="Form Studio Bottle",
+        price=899.0,
+        category="wellness",
+        stock=120,
+        rating=4.4,
+        description="Double-wall insulated steel bottle sized for desk sessions and gym runs.",
+        badge="Under 1K",
+        eta="Next-day delivery",
+    ),
+    Product(
+        id="p6",
+        name="Orbit Desk Lamp",
+        price=3299.0,
+        category="workspace",
+        stock=48,
+        rating=4.6,
+        description="Color-tunable task light with touch dimming and USB-C charging base.",
+        badge="Low stock",
+        eta="Ships today",
+    ),
 ]
 
 # ── Routes ────────────────────────────────────────────────────────────────────

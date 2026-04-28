@@ -9,7 +9,7 @@
 
 set -euo pipefail
 
-PROJECT_ID="practic-test-only"
+PROJECT_ID="practice-test1-494717"
 REPO_NAME="gcp-infra-end-to-end"
 REPO_OWNER="ajithvnr2001"
 BRANCH="main"
@@ -56,7 +56,7 @@ gcloud builds triggers run ecommerce-ci-pipeline \
 echo ""
 echo "=== DONE ==="
 echo "From now on, every 'git push' to 'main' will automatically:"
-echo "  1. Build all 4 Docker images in parallel (~45-60 seconds)"
+echo "  1. Build all 5 Docker images in parallel (~45-60 seconds)"
 echo "  2. Push them to GCR with commit SHA tag"
 echo "  3. Update k8s/deployments/ manifests with the new tag"
 echo "  4. ArgoCD detects the git change and rolls out new pods (~30 seconds)"

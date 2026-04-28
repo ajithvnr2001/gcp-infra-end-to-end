@@ -11,7 +11,7 @@
 #   4.  CONNECT — fetches GKE credentials
 #   5.  HELM    — installs platform controllers (cert-manager, external-secrets, ingress-nginx)
 #   6.  ARGOCD  — installs ArgoCD and applies the Application manifest
-#   7.  BUILD   — builds and pushes all 4 Docker images to GCR via Cloud Build
+#   7.  BUILD   — builds and pushes all 5 Docker images to GCR via Cloud Build
 #   8.  GIT     — commits and pushes any pending changes to GitHub
 #   9.  VERIFY  — waits for ArgoCD sync and confirms pods are Running
 #
@@ -34,7 +34,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 # ─── CONFIGURATION ────────────────────────────────────────────────────────────
-PROJECT_ID="practic-test-only"
+PROJECT_ID="practice-test1-494717"
 REGION="us-central1"
 ZONE="us-central1-a"
 CLUSTER_NAME="ecommerce-cluster"
@@ -239,7 +239,7 @@ helm repo update
 helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
   --namespace monitoring --create-namespace \
   --values monitoring/prometheus/values.yaml \
-  --wait --timeout 10m
+  --wait --timeout 20m
 success "Prometheus & Grafana installed."
 log "Ingress LoadBalancer IP:"
 kubectl get svc -n ingress-nginx ingress-nginx-controller \
@@ -276,10 +276,10 @@ success "ArgoCD Application 'ecommerce-catalog' registered."
 # PHASE 7 — BUILD & PUSH DOCKER IMAGES
 # ══════════════════════════════════════════════════════════════════════════════
 section "🐳 PHASE 7: BUILD & PUSH DOCKER IMAGES TO GCR"
-log "Building all 4 microservice images via Cloud Build (parallel)..."
+log "Building all 5 service images via Cloud Build (parallel)..."
 
-SERVICES=("catalog" "cart" "payment" "api-gateway")
-IMAGE_NAMES=("catalog-service" "cart-service" "payment-service" "api-gateway")
+SERVICES=("catalog" "cart" "payment" "api-gateway" "frontend")
+IMAGE_NAMES=("catalog-service" "cart-service" "payment-service" "api-gateway" "frontend-service")
 BUILD_IDS=()
 
 for i in "${!SERVICES[@]}"; do
@@ -296,7 +296,7 @@ for i in "${!SERVICES[@]}"; do
   log "  → Build ID: $BUILD_ID"
 done
 
-log "Waiting for all 4 builds to complete..."
+log "Waiting for all ${#BUILD_IDS[@]} builds to complete..."
 for BUILD_ID in "${BUILD_IDS[@]}"; do
   log "  Polling build: $BUILD_ID"
   gcloud builds log --stream "$BUILD_ID" --project "$PROJECT_ID" 2>/dev/null || true

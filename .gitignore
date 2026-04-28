@@ -46,6 +46,12 @@ cost/
 disaster-recovery/
 docs/
 github-actions/
+!local-dev/
+local-dev/**
+!local-dev/docker-compose.yaml
+!docs/
+docs/**
+!docs/END-TO-END-GUIDE.md
 
 # Temp / Build Artifacts
 app-status.txt

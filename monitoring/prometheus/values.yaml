@@ -19,6 +19,7 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
+          storageClassName: standard-rwo
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
@@ -131,6 +132,7 @@ grafana:
   adminPassword: "admin"   # change in production — use a secret
   persistence:
     enabled: true
+    storageClassName: standard-rwo
     size: 5Gi
   resources:
     limits:
@@ -159,6 +161,7 @@ alertmanager:
     storage:
       volumeClaimTemplate:
         spec:
+          storageClassName: standard-rwo
           resources:
             requests:
               storage: 5Gi

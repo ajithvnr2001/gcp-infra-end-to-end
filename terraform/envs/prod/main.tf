@@ -11,7 +11,7 @@ terraform {
 
   # GCS remote state backend — run scripts/setup-backend.sh first
   backend "gcs" {
-    bucket = "tf-state-ecommerce-prod-practic-test-only"
+    bucket = "tf-state-ecommerce-prod-practice-test1-494717"
     prefix = "prod/terraform.tfstate"
   }
 }

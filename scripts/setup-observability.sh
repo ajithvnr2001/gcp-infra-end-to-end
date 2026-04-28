@@ -32,7 +32,7 @@ helm upgrade --install kube-prometheus-stack \
   prometheus-community/kube-prometheus-stack \
   --namespace monitoring \
   --values monitoring/prometheus/values.yaml \
-  --wait --timeout 10m
+  --wait --timeout 20m
 
 echo "✅ Prometheus + Grafana installed"
 

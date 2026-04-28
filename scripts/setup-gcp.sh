@@ -48,6 +48,20 @@ for ROLE in \
 done
 
 echo ""
+echo "⚙️  Configuring default Service Account permissions..."
+PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")
+
+# Grant Cloud Build SA permissions
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" \
+  --role="roles/cloudbuild.builds.builder" --quiet
+
+# Grant Compute Engine SA permissions (required for Cloud Build source staging)
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member="serviceAccount:${PROJECT_NUMBER}-compute@developer.gserviceaccount.com" \
+  --role="roles/storage.admin" --quiet
+
+echo ""
 echo "📄 Generating service account key..."
 gcloud iam service-accounts keys create github-sa-key.json \
   --iam-account=$SA_EMAIL
