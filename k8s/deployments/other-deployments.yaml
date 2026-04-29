@@ -7,7 +7,7 @@ metadata:
   labels:
     app: cart-service
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: cart-service
@@ -46,11 +46,11 @@ spec:
                 name: cart-config
           resources:
             requests:
-              cpu: "100m"
-              memory: "128Mi"
+              cpu: "50m"
+              memory: "96Mi"
             limits:
-              cpu: "500m"
-              memory: "512Mi"
+              cpu: "250m"
+              memory: "256Mi"
           livenessProbe:
             httpGet:
               path: /health
@@ -73,7 +73,7 @@ metadata:
   labels:
     app: payment-service
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: payment-service
@@ -112,11 +112,11 @@ spec:
                 name: payment-config
           resources:
             requests:
-              cpu: "200m"     # payment needs more resources
-              memory: "256Mi"
+              cpu: "75m"      # free-trial friendly; raise for production
+              memory: "128Mi"
             limits:
-              cpu: "1000m"
-              memory: "1Gi"
+              cpu: "300m"
+              memory: "384Mi"
           livenessProbe:
             httpGet:
               path: /health
@@ -139,7 +139,7 @@ metadata:
   labels:
     app: api-gateway
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: api-gateway
@@ -182,11 +182,11 @@ spec:
               value: "http://payment-service:8002"
           resources:
             requests:
-              cpu: "100m"
-              memory: "128Mi"
+              cpu: "50m"
+              memory: "96Mi"
             limits:
-              cpu: "500m"
-              memory: "512Mi"
+              cpu: "250m"
+              memory: "256Mi"
           livenessProbe:
             httpGet:
               path: /health

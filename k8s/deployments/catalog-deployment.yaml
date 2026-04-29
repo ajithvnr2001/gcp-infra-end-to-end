@@ -8,7 +8,7 @@ metadata:
     app: catalog-service
     version: v1
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: catalog-service
@@ -49,11 +49,11 @@ spec:
                 name: catalog-config
           resources:
             requests:
-              cpu: "100m"
-              memory: "128Mi"
+              cpu: "50m"
+              memory: "96Mi"
             limits:
-              cpu: "500m"
-              memory: "512Mi"
+              cpu: "250m"
+              memory: "256Mi"
           # Liveness probe — restart pod if app crashes/hangs
           livenessProbe:
             httpGet:
@@ -73,7 +73,7 @@ spec:
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: DoNotSchedule
+          whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
               app: catalog-service

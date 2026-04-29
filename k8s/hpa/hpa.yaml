@@ -12,8 +12,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: catalog-service
-  minReplicas: 2
-  maxReplicas: 20           # scale up to 20 pods during flash sales
+  minReplicas: 1
+  maxReplicas: 3            # free-trial friendly; raise for production/flash-sale tests
   metrics:
     - type: Resource
       resource:
@@ -29,10 +29,10 @@ spec:
           averageUtilization: 70
   behavior:
     scaleUp:
-      stabilizationWindowSeconds: 30   # react fast on scale-up
+      stabilizationWindowSeconds: 120  # avoid aggressive scale-up on small/free-trial clusters
       policies:
         - type: Pods
-          value: 4
+          value: 1
           periodSeconds: 60
     scaleDown:
       stabilizationWindowSeconds: 300  # be conservative on scale-down
@@ -51,8 +51,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: cart-service
-  minReplicas: 2
-  maxReplicas: 15
+  minReplicas: 1
+  maxReplicas: 2
   metrics:
     - type: Resource
       resource:
@@ -71,8 +71,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: payment-service
-  minReplicas: 2
-  maxReplicas: 10
+  minReplicas: 1
+  maxReplicas: 2
   metrics:
     - type: Resource
       resource:
@@ -91,8 +91,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: api-gateway
-  minReplicas: 2
-  maxReplicas: 20
+  minReplicas: 1
+  maxReplicas: 3
   metrics:
     - type: Resource
       resource:
