@@ -238,10 +238,11 @@ success "ingress-nginx installed."
 log "Installing Prometheus & Grafana..."
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts --force-update
 helm repo update
+log "Using free-trial monitoring profile: no Grafana PVC, no Prometheus PVC, Alertmanager disabled."
 helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
   --namespace monitoring --create-namespace \
   --values monitoring/prometheus/values.yaml \
-  --wait --timeout 20m
+  --wait --timeout 10m
 success "Prometheus & Grafana installed."
 log "Ingress LoadBalancer IP:"
 kubectl get svc -n ingress-nginx ingress-nginx-controller \

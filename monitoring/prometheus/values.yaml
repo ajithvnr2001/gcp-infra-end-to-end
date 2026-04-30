@@ -8,22 +8,25 @@
 
 prometheusOperator:
   admissionWebhooks:
-    enabled: true
+    enabled: false
   tls:
-    enabled: true
+    enabled: false
+
+defaultRules:
+  create: false
 
 prometheus:
   prometheusSpec:
-    retention: 15d
-    retentionSize: "10GB"
-    storageSpec:
-      volumeClaimTemplate:
-        spec:
-          storageClassName: standard-rwo
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 20Gi
+    retention: 2d
+    retentionSize: "1GB"
+    storageSpec: {}
+    resources:
+      requests:
+        cpu: 100m
+        memory: 384Mi
+      limits:
+        cpu: 300m
+        memory: 768Mi
     # Scrape all pods with annotation: prometheus.io/scrape: "true"
     additionalScrapeConfigs:
       - job_name: ecommerce-services
@@ -131,16 +134,14 @@ grafana:
   enabled: true
   adminPassword: "admin"   # change in production — use a secret
   persistence:
-    enabled: true
-    storageClassName: standard-rwo
-    size: 5Gi
+    enabled: false
   resources:
     limits:
-      cpu: 500m
-      memory: 512Mi
+      cpu: 200m
+      memory: 256Mi
     requests:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 50m
+      memory: 96Mi
   grafana.ini:
     server:
       root_url: "http://localhost:3000"
@@ -157,14 +158,9 @@ grafana:
             path: /var/lib/grafana/dashboards/ecommerce
 
 alertmanager:
+  enabled: false
   alertmanagerSpec:
-    storage:
-      volumeClaimTemplate:
-        spec:
-          storageClassName: standard-rwo
-          resources:
-            requests:
-              storage: 5Gi
+    storage: {}
   config:
     global:
       resolve_timeout: 5m

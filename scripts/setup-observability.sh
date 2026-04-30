@@ -1,7 +1,7 @@
 #!/bin/bash
 # scripts/setup-observability.sh
 # Installs the full observability stack in order:
-#   1. Prometheus + Grafana + Alertmanager  (kube-prometheus-stack)
+#   1. Prometheus + Grafana                 (kube-prometheus-stack free-trial profile)
 #   2. Loki + Promtail                      (log aggregation)
 #   3. OpenTelemetry Collector              (distributed tracing -> Cloud Trace)
 #   4. Deploys SLO burn-rate alert rules
@@ -32,7 +32,7 @@ helm upgrade --install kube-prometheus-stack \
   prometheus-community/kube-prometheus-stack \
   --namespace monitoring \
   --values monitoring/prometheus/values.yaml \
-  --wait --timeout 20m
+  --wait --timeout 10m
 
 echo "✅ Prometheus + Grafana installed"
 
@@ -115,9 +115,9 @@ echo "Access Prometheus:"
 echo "  kubectl port-forward svc/kube-prometheus-stack-prometheus -n monitoring 9090:9090"
 echo "  Open: http://localhost:9090"
 echo ""
-echo "Access Alertmanager:"
-echo "  kubectl port-forward svc/kube-prometheus-stack-alertmanager -n monitoring 9093:9093"
-echo "  Open: http://localhost:9093"
+echo "Alertmanager:"
+echo "  Disabled in monitoring/prometheus/values.yaml for the free-trial profile."
+echo "  Enable it for production clusters with enough capacity."
 echo ""
 echo "View Cloud Trace:"
 echo "  https://console.cloud.google.com/traces?project=$PROJECT_ID"

@@ -29,6 +29,7 @@ Use it to learn:
 13. `13-argocd-applications-deep-guide.md`
 14. `14-end-to-end-project-interview-master-guide.md`
 15. `15-free-trial-gke-capacity-fix.md`
+16. `16-monitoring-helm-free-trial-fix.md`
 
 ## One-Line Project Summary
 
@@ -54,3 +55,5 @@ For ArgoCD-specific navigation using `https://localhost:8080/applications`, read
 For the full project story across Terraform, GKE, CI/CD, GitOps, Kubernetes, monitoring, security, troubleshooting, AWS mapping, and interview answers, read `14-end-to-end-project-interview-master-guide.md`.
 
 For the catalog-service `Insufficient cpu` and topology spread scheduling fix on a free-trial GKE cluster, read `15-free-trial-gke-capacity-fix.md`.
+
+For the Prometheus/Grafana Helm install stuck on Grafana PVC in a free-trial GKE cluster, read `16-monitoring-helm-free-trial-fix.md`.
