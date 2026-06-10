@@ -1,0 +1,73 @@
+# GCP credentials — NEVER commit
+*.json
+!monitoring/dashboards/dashboard.json
+github-sa-key.json
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.backup
+*.tfvars
+!terraform/envs/prod/terraform.tfvars.example
+
+# Python & Environments
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+dist/
+.coverage
+coverage.xml
+browser_env/
+venv/
+.venv/
+
+# Docker
+.dockerignore
+
+# Interview Prep & Resumes (Non-deployment)
+*_Interview_Prep*.md
+Mastering GCP Infrastructure Interviews.md
+youtube interviews.md
+jd_interview_prep.md
+jds.txt
+resume_*.md
+architecture.md.resolved
+explain.md
+fixes.md
+flow.md
+directory.md
+
+# Cloud & Infrastructure (Non-GCP Deployment)
+aws/
+local-dev/
+cost/
+disaster-recovery/
+docs/
+github-actions/
+!local-dev/
+local-dev/**
+!local-dev/docker-compose.yaml
+!docs/
+docs/**
+!docs/END-TO-END-GUIDE.md
+
+# Temp / Build Artifacts
+app-status.txt
+catalog-live.yaml
+outofsync.json
+*.ipynb
+*.py
+!services/**/*.py
+!scripts/**/*.py
+!solve_2captcha.py   # Actually, keep it if it's used? No, ignore it.
+solve_2captcha.py
+nim_browser.py
+
+# Local dev
+.env
+.env.*
+*.log
+/tmp/
+pip-install.log

@@ -1,0 +1,64 @@
+# .pre-commit-config.yaml
+# Runs checks automatically before every git commit
+# Install: pip install pre-commit && pre-commit install
+#
+# This catches issues BEFORE they reach CI — faster feedback loop
+
+repos:
+  # ── General file checks ────────────────────────────────────────────────────
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+      - id: check-json
+      - id: check-merge-conflict
+      - id: detect-private-key          # blocks accidental key commits
+      - id: check-added-large-files
+        args: [--maxkb=500]
+
+  # ── Secret detection ────────────────────────────────────────────────────────
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.2
+    hooks:
+      - id: gitleaks
+
+  # ── Python formatting ───────────────────────────────────────────────────────
+  - repo: https://github.com/psf/black
+    rev: 24.3.0
+    hooks:
+      - id: black
+        language_version: python3.11
+        files: ^services/
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        files: ^services/
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+        files: ^services/
+        args: [--max-line-length=120, --ignore=E501,W503]
+
+  # ── Terraform checks ────────────────────────────────────────────────────────
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.88.4
+    hooks:
+      - id: terraform_fmt         # auto-formats .tf files
+      - id: terraform_validate    # validates syntax without hitting cloud
+
+  # ── Kubernetes manifest checks ─────────────────────────────────────────────
+  - repo: https://github.com/bridgecrewio/checkov
+    rev: 3.2.0
+    hooks:
+      - id: checkov
+        files: ^k8s/
+        args:
+          - --framework=kubernetes
+          - --skip-check=CKV_K8S_28,CKV_K8S_20   # skip overly strict checks

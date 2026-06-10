@@ -1,0 +1,28 @@
+# monitoring/grafana/provisioning/datasources/datasources.yaml
+# Auto-provisioned — Grafana reads this on startup
+
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+    isDefault: true
+    jsonData:
+      timeInterval: "15s"
+      queryTimeout: "60s"
+      httpMethod: POST
+
+  - name: CloudTrace
+    type: googlecloud-trace-datasource   # needs grafana-googlecloud-trace plugin
+    access: proxy
+    jsonData:
+      projectId: YOUR_GCP_PROJECT_ID
+
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki.monitoring.svc.cluster.local:3100
+    jsonData:
+      maxLines: 1000

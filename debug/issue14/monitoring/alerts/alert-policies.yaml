@@ -1,0 +1,71 @@
+# monitoring/alerts/alert-policies.yaml
+# Apply with: gcloud alpha monitoring policies import --policy-from-file=alert-policies.yaml
+
+# Alert 1: High CPU on any GKE workload (flash sale spike)
+displayName: "GKE CPU High - Ecommerce"
+combiner: OR
+conditions:
+  - displayName: "CPU > 80% for 5 minutes"
+    conditionThreshold:
+      filter: >
+        resource.type = "k8s_container"
+        AND resource.labels.namespace_name = "ecommerce"
+        AND metric.type = "kubernetes.io/container/cpu/request_utilization"
+      comparison: COMPARISON_GT
+      thresholdValue: 0.80
+      duration: 300s
+      aggregations:
+        - alignmentPeriod: 60s
+          perSeriesAligner: ALIGN_MEAN
+          crossSeriesReducer: REDUCE_MEAN
+          groupByFields:
+            - resource.labels.container_name
+notificationChannels: []   # add your email/Slack channel ID here
+alertStrategy:
+  notificationRateLimit:
+    period: 300s
+---
+# Alert 2: Pod crash loop (CrashLoopBackOff)
+displayName: "Pod CrashLoopBackOff - Ecommerce"
+combiner: OR
+conditions:
+  - displayName: "Container restart count > 3 in 10 min"
+    conditionThreshold:
+      filter: >
+        resource.type = "k8s_container"
+        AND resource.labels.namespace_name = "ecommerce"
+        AND metric.type = "kubernetes.io/container/restart_count"
+      comparison: COMPARISON_GT
+      thresholdValue: 3
+      duration: 600s
+      aggregations:
+        - alignmentPeriod: 60s
+          perSeriesAligner: ALIGN_RATE
+---
+# Alert 3: Cloud SQL high connections
+displayName: "Cloud SQL Connections High"
+combiner: OR
+conditions:
+  - displayName: "DB connections > 80"
+    conditionThreshold:
+      filter: >
+        resource.type = "cloudsql_database"
+        AND metric.type = "cloudsql.googleapis.com/database/postgresql/num_backends"
+      comparison: COMPARISON_GT
+      thresholdValue: 80
+      duration: 180s
+---
+# Alert 4: Payment service error rate
+displayName: "Payment Service 5xx Errors"
+combiner: OR
+conditions:
+  - displayName: "HTTP 5xx rate > 1% over 5 min"
+    conditionThreshold:
+      filter: >
+        resource.type = "k8s_container"
+        AND resource.labels.container_name = "payment"
+        AND metric.type = "logging.googleapis.com/log_entry_count"
+        AND metric.labels.severity = "ERROR"
+      comparison: COMPARISON_GT
+      thresholdValue: 5
+      duration: 300s

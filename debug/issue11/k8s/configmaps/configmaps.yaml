@@ -1,0 +1,42 @@
+# k8s/configmaps/configmaps.yaml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: catalog-config
+  namespace: ecommerce
+data:
+  APP_ENV: "production"
+  APP_PORT: "8000"
+  DB_NAME: "catalog"
+  DB_HOST: "127.0.0.1"     # Cloud SQL Auth Proxy sidecar
+  DB_PORT: "5432"
+  LOG_LEVEL: "INFO"
+  CACHE_TTL: "300"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cart-config
+  namespace: ecommerce
+data:
+  APP_ENV: "production"
+  APP_PORT: "8001"
+  LOG_LEVEL: "INFO"
+  SESSION_TTL: "3600"
+  CATALOG_URL: "http://catalog-service:8000"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-config
+  namespace: ecommerce
+data:
+  APP_ENV: "production"
+  APP_PORT: "8002"
+  DB_NAME: "orders"
+  DB_HOST: "127.0.0.1"
+  DB_PORT: "5432"
+  LOG_LEVEL: "INFO"
+  PAYMENT_GATEWAY: "razorpay"     # Indian payment gateway
+  CURRENCY: "INR"
